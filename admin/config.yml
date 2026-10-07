@@ -3,7 +3,8 @@
     "name": "github",
     "repo": "busang8997-bit/yeomyeong-philosophy",
     "branch": "main",
-    "site_domain": "xn--v42bn2semfh4j.kr"
+    "site_domain": "xn--v42bn2semfh4j.kr",
+    "auth_scope": "public_repo"
   },
   "site_url": "https://xn--v42bn2semfh4j.kr",
   "display_url": "https://xn--v42bn2semfh4j.kr",
