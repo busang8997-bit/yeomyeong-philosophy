@@ -1,0 +1,625 @@
+{
+  "backend": {
+    "name": "github",
+    "repo": "busang8997-bit/yeomyeong-philosophy",
+    "branch": "main",
+    "site_domain": "xn--v42bn2semfh4j.kr"
+  },
+  "site_url": "https://xn--v42bn2semfh4j.kr",
+  "display_url": "https://xn--v42bn2semfh4j.kr",
+  "locale": "ko",
+  "publish_mode": "editorial_workflow",
+  "media_folder": "assets/uploads",
+  "public_folder": "/assets/uploads",
+  "collections": [
+    {
+      "name": "books",
+      "label": "도서",
+      "files": [
+        {
+          "name": "books",
+          "label": "도서",
+          "file": "cms/data/books.json",
+          "fields": [
+            {
+              "name": "items",
+              "label": "도서",
+              "widget": "list",
+              "summary": "{{fields.title}}",
+              "fields": [
+                {
+                  "name": "slug",
+                  "label": "페이지 이름 (영문·숫자·하이픈)",
+                  "widget": "string",
+                  "pattern": [
+                    "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "영문 소문자·숫자·하이픈만 입력하세요"
+                  ]
+                },
+                {
+                  "name": "title",
+                  "label": "책 제목",
+                  "widget": "string"
+                },
+                {
+                  "name": "author",
+                  "label": "저자",
+                  "widget": "string"
+                },
+                {
+                  "name": "description",
+                  "label": "책 소개",
+                  "widget": "text"
+                },
+                {
+                  "name": "status",
+                  "label": "출간 상태",
+                  "widget": "string"
+                },
+                {
+                  "name": "color",
+                  "label": "표지 배경색",
+                  "widget": "color"
+                },
+                {
+                  "name": "image",
+                  "label": "표지 이미지",
+                  "widget": "image",
+                  "required": false
+                },
+                {
+                  "name": "price",
+                  "label": "가격 안내",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "purchase_url",
+                  "label": "구매처 링크",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "video_url",
+                  "label": "보조·소개 영상 링크",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "toc",
+                  "label": "목차",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "product_type",
+                  "label": "상품 구성",
+                  "widget": "select",
+                  "options": [
+                    "전자책",
+                    "전자책+보조강의",
+                    "시리즈 학습지+보조강의",
+                    "영상집",
+                    "프로그램"
+                  ],
+                  "default": "전자책"
+                },
+                {
+                  "name": "topic",
+                  "label": "주제",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "series",
+                  "label": "시리즈",
+                  "widget": "string",
+                  "required": false
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "editor": {
+        "preview": false
+      }
+    },
+    {
+      "name": "lectures",
+      "label": "강의·보조영상",
+      "files": [
+        {
+          "name": "lectures",
+          "label": "강의·보조영상",
+          "file": "cms/data/lectures.json",
+          "fields": [
+            {
+              "name": "items",
+              "label": "강의·보조영상",
+              "widget": "list",
+              "summary": "{{fields.title}}",
+              "fields": [
+                {
+                  "name": "slug",
+                  "label": "페이지 이름 (영문·숫자·하이픈)",
+                  "widget": "string",
+                  "pattern": [
+                    "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "영문 소문자·숫자·하이픈만 입력하세요"
+                  ]
+                },
+                {
+                  "name": "title",
+                  "label": "강의 제목",
+                  "widget": "string"
+                },
+                {
+                  "name": "audience",
+                  "label": "대상",
+                  "widget": "string"
+                },
+                {
+                  "name": "format",
+                  "label": "강의 방식",
+                  "widget": "string"
+                },
+                {
+                  "name": "description",
+                  "label": "소개",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "bullets",
+                  "label": "주요 내용 (한 줄에 하나)",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "price",
+                  "label": "가격 안내",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "link",
+                  "label": "신청 링크",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "video_url",
+                  "label": "공개 영상 링크",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "topic",
+                  "label": "주제",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "series",
+                  "label": "시리즈",
+                  "widget": "string",
+                  "required": false
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "editor": {
+        "preview": false
+      }
+    },
+    {
+      "name": "programs",
+      "label": "점술 프로그램",
+      "files": [
+        {
+          "name": "programs",
+          "label": "점술 프로그램",
+          "file": "cms/data/programs.json",
+          "fields": [
+            {
+              "name": "items",
+              "label": "점술 프로그램",
+              "widget": "list",
+              "summary": "{{fields.title}}",
+              "fields": [
+                {
+                  "name": "title",
+                  "label": "프로그램 이름",
+                  "widget": "string"
+                },
+                {
+                  "name": "icon",
+                  "label": "아이콘 문자",
+                  "widget": "string"
+                },
+                {
+                  "name": "description",
+                  "label": "소개",
+                  "widget": "text"
+                },
+                {
+                  "name": "link",
+                  "label": "실행·신청 링크",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "price",
+                  "label": "가격 안내",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "topic",
+                  "label": "주제",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "series",
+                  "label": "시리즈",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "featured",
+                  "label": "대표 프로그램",
+                  "widget": "boolean",
+                  "default": false
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "editor": {
+        "preview": false
+      }
+    },
+    {
+      "name": "content",
+      "label": "영상·블로그",
+      "files": [
+        {
+          "name": "content",
+          "label": "영상·블로그",
+          "file": "cms/data/content.json",
+          "fields": [
+            {
+              "name": "items",
+              "label": "영상·블로그",
+              "widget": "list",
+              "summary": "{{fields.title}}",
+              "fields": [
+                {
+                  "name": "title",
+                  "label": "제목",
+                  "widget": "string"
+                },
+                {
+                  "name": "type",
+                  "label": "종류",
+                  "widget": "select",
+                  "options": [
+                    "blog",
+                    "video"
+                  ]
+                },
+                {
+                  "name": "tag",
+                  "label": "분류",
+                  "widget": "string"
+                },
+                {
+                  "name": "description",
+                  "label": "설명",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "link",
+                  "label": "글·영상 링크",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "image",
+                  "label": "썸네일",
+                  "widget": "image",
+                  "required": false
+                },
+                {
+                  "name": "color",
+                  "label": "배경색",
+                  "widget": "color"
+                },
+                {
+                  "name": "topic",
+                  "label": "주제",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "series",
+                  "label": "시리즈",
+                  "widget": "string",
+                  "required": false
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "editor": {
+        "preview": false
+      }
+    },
+    {
+      "name": "questions",
+      "label": "질문상담",
+      "files": [
+        {
+          "name": "questions",
+          "label": "질문상담",
+          "file": "cms/data/questions.json",
+          "fields": [
+            {
+              "name": "items",
+              "label": "질문상담",
+              "widget": "list",
+              "summary": "{{fields.q}}",
+              "fields": [
+                {
+                  "name": "id",
+                  "label": "고유 번호",
+                  "widget": "number",
+                  "value_type": "int",
+                  "min": 1
+                },
+                {
+                  "name": "q",
+                  "label": "질문",
+                  "widget": "string"
+                },
+                {
+                  "name": "desc",
+                  "label": "설명",
+                  "widget": "text"
+                },
+                {
+                  "name": "cat",
+                  "label": "분류",
+                  "widget": "string"
+                },
+                {
+                  "name": "consult",
+                  "label": "연결 상담 분야 코드",
+                  "widget": "string"
+                },
+                {
+                  "name": "method",
+                  "label": "답변 방식",
+                  "widget": "select",
+                  "options": [
+                    "deep",
+                    "fast"
+                  ]
+                },
+                {
+                  "name": "price",
+                  "label": "가격 안내",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "tags",
+                  "label": "검색어",
+                  "widget": "list",
+                  "required": false
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "editor": {
+        "preview": false
+      }
+    },
+    {
+      "name": "consult",
+      "label": "상담 분야",
+      "files": [
+        {
+          "name": "consult",
+          "label": "상담 분야",
+          "file": "cms/data/consult.json",
+          "fields": [
+            {
+              "name": "items",
+              "label": "상담 분야",
+              "widget": "list",
+              "summary": "{{fields.name}}",
+              "fields": [
+                {
+                  "name": "slug",
+                  "label": "분야 코드",
+                  "widget": "string",
+                  "pattern": [
+                    "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "영문 소문자·숫자·하이픈만 입력하세요"
+                  ]
+                },
+                {
+                  "name": "name",
+                  "label": "상담 분야",
+                  "widget": "string"
+                },
+                {
+                  "name": "icon",
+                  "label": "아이콘 문자",
+                  "widget": "string"
+                },
+                {
+                  "name": "desc",
+                  "label": "소개",
+                  "widget": "text"
+                },
+                {
+                  "name": "price",
+                  "label": "가격 안내",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "method",
+                  "label": "답변 방식",
+                  "widget": "select",
+                  "options": [
+                    {
+                      "label": "직접 풀이",
+                      "value": "deep"
+                    },
+                    {
+                      "label": "빠른 점단 결과지",
+                      "value": "fast"
+                    }
+                  ]
+                },
+                {
+                  "name": "link",
+                  "label": "신청 링크",
+                  "widget": "string",
+                  "required": false
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "editor": {
+        "preview": false
+      }
+    },
+    {
+      "name": "categories",
+      "label": "질문 분류",
+      "files": [
+        {
+          "name": "categories",
+          "label": "질문 분류",
+          "file": "cms/data/categories.json",
+          "fields": [
+            {
+              "name": "items",
+              "label": "분류 목록",
+              "widget": "list"
+            }
+          ]
+        }
+      ],
+      "editor": {
+        "preview": false
+      }
+    },
+    {
+      "name": "notices",
+      "label": "공지",
+      "files": [
+        {
+          "name": "notices",
+          "label": "공지",
+          "file": "cms/data/notices.json",
+          "fields": [
+            {
+              "name": "items",
+              "label": "공지",
+              "widget": "list",
+              "summary": "{{fields.title}}",
+              "fields": [
+                {
+                  "name": "title",
+                  "label": "공지 제목",
+                  "widget": "string"
+                },
+                {
+                  "name": "body",
+                  "label": "내용",
+                  "widget": "text"
+                },
+                {
+                  "name": "link",
+                  "label": "관련 링크",
+                  "widget": "string",
+                  "required": false
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "editor": {
+        "preview": false
+      }
+    },
+    {
+      "name": "settings",
+      "label": "사이트 설정",
+      "files": [
+        {
+          "name": "settings",
+          "label": "사이트 설정",
+          "file": "cms/data/settings.json",
+          "fields": [
+            {
+              "name": "site_title",
+              "label": "사이트 이름",
+              "widget": "string"
+            },
+            {
+              "name": "description",
+              "label": "검색 소개",
+              "widget": "text"
+            },
+            {
+              "name": "youtube_url",
+              "label": "유튜브 채널",
+              "widget": "string"
+            },
+            {
+              "name": "blog_url",
+              "label": "블로그",
+              "widget": "string"
+            },
+            {
+              "name": "kakao_url",
+              "label": "카카오 채널",
+              "widget": "string"
+            },
+            {
+              "name": "intro",
+              "label": "저자·사이트 소개",
+              "widget": "text"
+            },
+            {
+              "name": "home_title",
+              "label": "첫 화면 제목",
+              "widget": "text"
+            }
+          ]
+        }
+      ],
+      "editor": {
+        "preview": false
+      }
+    }
+  ]
+}
