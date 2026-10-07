@@ -1,0 +1,26 @@
+{
+  "name": "여명철학출판사",
+  "short_name": "여명철학",
+  "description": "질문형 문답 상담, 사주명리·타로 서적과 강의를 소개하는 여명철학출판사입니다.",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F7F3EA",
+  "theme_color": "#171B30",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
