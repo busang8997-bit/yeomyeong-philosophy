@@ -1,0 +1,104 @@
+{
+  "items": [
+    {
+      "title": "여명미래역학 통합 프로그램",
+      "icon": "黎",
+      "description": "종합간명지·진로적성·궁합·점술 프로그램을 한 화면에 모은 통합 버전입니다. 여명쌤이 직접 연구·상담용으로 사용합니다.",
+      "link": "",
+      "price": "",
+      "topic": "",
+      "series": "",
+      "featured": true
+    },
+    {
+      "title": "종합간명지",
+      "icon": "命",
+      "description": "생년월일시 자동계산과 사주간지 직접입력·날짜역산을 한곳에서 처리하고 대운·년운·신살을 종합 분석합니다.",
+      "link": "",
+      "price": "",
+      "topic": "",
+      "series": "",
+      "featured": false
+    },
+    {
+      "title": "진로적성 분석",
+      "icon": "路",
+      "description": "생년월일시를 선택해 사주 진로·직업 적성을 분석합니다.",
+      "link": "",
+      "price": "",
+      "topic": "",
+      "series": "",
+      "featured": false
+    },
+    {
+      "title": "궁합",
+      "icon": "合",
+      "description": "두 사람의 사주명식과 음양·오행·조후·궁성·합충신살·인연법을 종합 비교합니다.",
+      "link": "",
+      "price": "",
+      "topic": "",
+      "series": "",
+      "featured": false
+    },
+    {
+      "title": "타로상담",
+      "icon": "✦",
+      "description": "질문·카드선택·여명식 타로해석 프로그램입니다.",
+      "link": "",
+      "price": "",
+      "topic": "",
+      "series": "",
+      "featured": false
+    },
+    {
+      "title": "즉간점",
+      "icon": "卽",
+      "description": "숫자 1~6을 골라 초전·중전·말전을 구성하고 질문 맥락에 따라 장면을 해석합니다.",
+      "link": "",
+      "price": "",
+      "topic": "",
+      "series": "",
+      "featured": false
+    },
+    {
+      "title": "주역점 114",
+      "icon": "易",
+      "description": "질문요지·상황확인 후 본괘·변괘·동효를 종합하는 주역점입니다.",
+      "link": "",
+      "price": "",
+      "topic": "",
+      "series": "",
+      "featured": false
+    },
+    {
+      "title": "구궁역수",
+      "icon": "九",
+      "description": "생년월일·생시와 신수를 볼 나이를 입력해 구궁신수·분기별 운세를 분석합니다.",
+      "link": "",
+      "price": "",
+      "topic": "",
+      "series": "",
+      "featured": false
+    },
+    {
+      "title": "택일",
+      "icon": "日",
+      "description": "일진조회와 이사·혼인·개업·출산 목적별 택일 및 택일인증서를 작성합니다.",
+      "link": "",
+      "price": "",
+      "topic": "",
+      "series": "",
+      "featured": false
+    },
+    {
+      "title": "해몽·징후풀이",
+      "icon": "夢",
+      "description": "해몽과 생활징후 자료를 검색·분석합니다.",
+      "link": "",
+      "price": "",
+      "topic": "",
+      "series": "",
+      "featured": false
+    }
+  ]
+}
