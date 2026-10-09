@@ -62,20 +62,8 @@ export function build(root=process.cwd()){
    if(care)s=s.replace(/(<p class="body">)[\s\S]*?(<\/p>)/,`$1${esc(settings.intro)}$2`);
    else s=s.replace('<p>'+esc(defaults.intro)+'</p>','<p>'+esc(settings.intro)+'</p>');
   }
-  s=s.replace('</footer>','<div class="wrap" style="padding:12px 0;font-size:16px"><a href="/admin/">관리자</a></div></footer>');
-  if(!care)s=s.replace('</head>',`<style id="mobile-reading-size">
-@media(max-width:640px){
- body{font-size:24px;line-height:1.75}
- .hero .home-intro,.hero p.lead,.sec-head p,.qcard p.desc,.bookbody .desc,.prog p,.lect ul,.tocbox p,.pillar span,.detail,.postbody p{font-size:24px!important;line-height:1.75}
- .home-fold-title{font-size:30px!important;line-height:1.45}
- .qcard h3,.lect h3,.prog h3,.bookbody .booktitle,.postbody h4,.home-fold-body h3{font-size:28px!important;line-height:1.5}
- .btn,.btn-sm,.home-fold-body .btn,.home-fold-body .btn-sm,.top .nav a,.home-nav-toggle,.search input,.cat{font-size:22px!important;line-height:1.5;min-height:56px}
- .bookbody .author,.bookbody .status,.lect .fmt,.lect .who,.tag,.kicker,.resultbar,.ch-item span,.noticeitem span,.home-fold-hint,.home-fold-body .author,.home-fold-body .fmt,.home-fold-body .status,.home-fold-body .who,footer,footer .fnote,footer .flinks{font-size:20px!important;line-height:1.7}
- .qcard .price,.home-fold-body .price{font-size:24px!important;white-space:normal}
- .row,.qtop,.ltop{flex-wrap:wrap}.row>*{max-width:100%}
- .bookbody,.qcard,.lect,.prog,.postbody{overflow-wrap:anywhere;min-width:0}
-}
-</style></head>`);
+  // 공개 페이지에는 관리자 링크를 넣지 않는다(관리자 화면은 /admin/ 주소로 직접 접속).
+  // 글자 크기는 공통 CSS(assets/css/public-v5.css)에서만 관리한다. 빌드가 페이지에 스타일을 끼워 넣지 않는다.
   return s;
  }
  function save(f,s){fs.writeFileSync(path.join(out,f),s);}
