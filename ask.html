@@ -18,12 +18,23 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Song+Myung&family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/css/style.css">
-<link rel="stylesheet" href="assets/css/public-v5.css?v=20261006-2">
-<script src="assets/js/public-v5.js?v=20261006-2" defer></script>
-<style>:root{--ground:#f5f2e9;--surface:#fcfaf3;--surface-2:#e5ece3;--ink:#26332b;--ink-2:#4d6052;--ink-3:#4d6052;--line:#cbd7cc;--accent:#426f52;--accent-soft:#e5ece3;--navy:#203c30;--navy-2:#203c30;--on-navy:#f7f3ea;--on-navy-2:#f7f3ea}body{font-size:22px}.wrap{max-width:1080px}.top,.hero{background:#203c30;color:#f7f3ea}.brand,.top .nav a,.top .nav a[aria-current=page]{color:#f7f3ea}.home-nav-toggle{color:#f7f3ea;background:transparent}.home-fold-title{font-size:32px}.home-fold>summary{min-height:96px}.home-fold{margin-bottom:12px}.btn-accent,.home-fold-body .btn-accent{background:#426f52;color:#fff}.btn-line,.home-fold-body .btn-line{background:#e5ece3;color:#26332b;box-shadow:inset 0 0 0 1px #cbd7cc}.home-fold-icon{background:#e5ece3;color:#426f52}.qcard h3,.lect h3,.prog h3,.bookbody .booktitle,.postbody h4,.home-fold-body h3,.home-fold-body .booktitle,.home-fold-body .postbody h4{font-size:26px}.btn,.btn-sm,.home-fold-body .btn,.home-fold-body .btn-sm{font-size:19px}.qcard p.desc,.bookbody .desc,.prog p,.lect ul,.tocbox p,.sec-head p,.pillar span,.home-fold-body .desc,.home-fold-body .prog p{font-size:22px;color:#4d6052}footer{background:#e5ece3}@media(min-width:1024px){.qgrid.cols3,.books,.progs,.postgrid,.home-fold-body .qgrid.cols3,.home-fold-body .books,.home-fold-body .progs,.home-fold-body .postgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}</style>
+<link rel="stylesheet" href="assets/css/public-v5.css?v=20261009-6">
+<script src="assets/js/public-v5.js?v=20261009-6" defer></script>
 </head>
 <body data-fold-mobile="1">
-<header class="top"><div class="wrap"><a class="brand" href="index.html" aria-label="여명철학 처음으로"><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#d4b66f"/><path d="M7 9h7c2 0 2 2 2 2s0-2 2-2h7v15h-7c-2 0-2 2-2 2s0-2-2-2H7z" fill="none" stroke="#171B30" stroke-width="2" stroke-linejoin="round"/><path d="M16 11v15" stroke="#171B30" stroke-width="2"/></svg>      여명철학    </a><button class="home-nav-toggle" type="button" aria-controls="home-main-nav" aria-expanded="false" hidden>메뉴</button><nav class="nav" id="home-main-nav" aria-label="주요 메뉴"><a href="ask.html" aria-current="page">질문상담</a><a href="consult.html">상담 분야</a><a href="books.html">도서</a><a href="lectures.html">강의</a><a href="programs.html">프로그램</a><a href="content.html">영상 · 블로그</a><a href="about.html">여명철학 소개</a></nav></div></header>
+<!-- layout:header --><header class="top"><div class="wrap">
+  <a class="brand" href="index.html" aria-label="여명철학 처음으로"><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#d4b66f"/><path d="M7 9h7c2 0 2 2 2 2s0-2 2-2h7v15h-7c-2 0-2 2-2 2s0-2-2-2H7z" fill="none" stroke="#171B30" stroke-width="2" stroke-linejoin="round"/><path d="M16 11v15" stroke="#171B30" stroke-width="2"/></svg>      여명철학    </a>
+  <button class="home-nav-toggle" type="button" aria-controls="home-main-nav" aria-expanded="false" hidden>메뉴</button>
+  <nav class="nav" id="home-main-nav" aria-label="주요 메뉴">
+    <a href="ask.html" aria-current="page">질문상담</a>
+    <a href="consult.html">상담 분야</a>
+    <a href="books.html">도서</a>
+    <a href="lectures.html">강의</a>
+    <a href="programs.html">프로그램</a>
+    <a href="content.html">영상 · 블로그</a>
+    <a href="about.html">여명철학 소개</a>
+  </nav>
+</div></header><!-- /layout:header -->
 <main><section class="block" style="padding-top:40px"><div class="wrap"><div class="sec-head"><p class="kicker">질문상담</p><h2>지금 궁금한 질문 하나를 고르세요</h2><p>사주 전체를 길게 풀어드리지 않습니다. 마음에 걸린 질문 하나를 고르시면, 그 질문에 맞는 상담으로 연결해 드립니다.</p></div><div class="search"><input type="search" id="qsearch" placeholder="궁금한 것을 적어 보세요 (예: 이직, 재회, 계약)" aria-label="질문 검색"></div><div class="cats" id="cats" role="group" aria-label="상담 분야"></div><p class="resultbar" id="resultbar"></p><div class="qgrid" id="qgrid"></div></div></section>
 <script>
 const CATS = ["연애·재회","직장·취업","사업·재물","시험·합격","계약·매매","가족·대인관계","이사·이동","기타 질문상담"];
@@ -36,4 +47,25 @@ function matches(item){const okCat=activeCat==="전체"||item.cat===activeCat;if
 function renderQuestions(){const list=QUESTIONS.filter(matches);barEl.textContent=keyword?`"${keyword}" 검색 결과 ${list.length}건`:`${activeCat} · ${list.length}건`;if(list.length===0){gridEl.innerHTML=`<div class="empty">해당하는 질문이 아직 없습니다. 카카오톡 채널로 궁금한 점을 직접 남겨 주세요.</div>`;return;}gridEl.innerHTML=list.map(it=>{const c=CONSULT_BY_SLUG[it.consult]||{};const cname=c.name||"상담";return `<article class="qcard"><div class="qtop"><h3>${it.q}</h3><span class="price">${priceLabel(it)}</span></div><p class="desc">${it.desc}</p><div class="qmeta"><span class="tag">${it.cat}</span><span class="tag method">${it.method==="fast"?"빠른 점단 결과지":"여명쌤 직접 풀이"}</span></div><div class="row"><a class="btn btn-accent btn-sm" href="consult.html#c-${encodeURIComponent(it.consult)}">[${cname}]으로 신청</a></div></article>`;}).join("");}
 catsEl.addEventListener("click",e=>{const b=e.target.closest(".cat");if(!b)return;activeCat=b.dataset.c;renderCats();renderQuestions();});let searchTimer;searchEl.addEventListener("input",e=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{keyword=e.target.value.trim();renderQuestions();},120);});renderCats();renderQuestions();
 </script></main>
-<footer><div class="wrap"><div><b>여명철학출판사</b></div><details class="home-footer-info"><summary>사업자 정보 · 이용 안내</summary><div class="biz"><span>대표 이부상</span><span>상호 여명철학출판사</span><span>사업자등록번호 211-96-39049</span><span>주소 경기도 고양시 일산동구 강석로 21, 더프라임 614호 (백석동)</span><span>이메일 dfc114@naver.com</span></div><div class="fnote">상담 결과는 참고 자료입니다. 신청·결제는 각 페이지에서 안내합니다.</div></details><div class="flinks"><a href="privacy.html">개인정보처리방침</a><a href="mailto:dfc114@naver.com">dfc114@naver.com</a><span>010-8178-4013</span></div></div></footer><script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}</script></body></html>
+<!-- layout:footer --><footer><div class="wrap">
+  <div><b>여명철학출판사</b></div>
+  <details class="home-footer-info"><summary>사업자 정보 · 이용 안내</summary>
+    <div class="biz">
+      <span>대표 이부상</span>
+      <span>상호 여명철학출판사</span>
+      <span>사업자등록번호 211-96-39049</span>
+      <span>주소 경기도 고양시 일산동구 강석로 21, 더프라임 614호 (백석동)</span>
+      <span>이메일 dfc114@naver.com</span>
+    </div>
+    <div class="fnote">상담 결과는 참고 자료입니다. 신청·결제는 각 페이지에서 안내합니다.</div>
+  </details>
+  <div class="flinks">
+    <a href="privacy.html">개인정보처리방침</a>
+    <a href="mailto:dfc114@naver.com">dfc114@naver.com</a>
+    <span>010-8178-4013</span>
+  </div>
+  <div class="home-install" hidden>
+    <button type="button" class="home-install-btn">📱 홈 화면에 추가</button>
+    <p class="home-install-help" role="status" hidden></p>
+  </div>
+</div></footer><!-- /layout:footer --><script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}</script></body></html>

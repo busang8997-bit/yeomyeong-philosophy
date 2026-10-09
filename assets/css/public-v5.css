@@ -204,3 +204,39 @@ h1,h2,h3{font-family:var(--body)}
 .brand-logo{width:40px;height:40px;object-fit:contain;flex-shrink:0}
 .home-banner{display:block;max-width:100%;max-height:300px;margin:20px auto 0;object-fit:contain}
 .hero .home-intro{font-size:20px;line-height:1.6;color:inherit;margin:12px 0 0;max-width:42em}
+
+/* ===== 공통 테마 (전 페이지 공통) =====
+   이전에는 홈·질문상담·상담분야·도서·소개 5개 페이지에만 <style>로 복사돼 있던 설정.
+   모든 페이지가 같은 색·글자 크기를 쓰도록 이쪽으로 옮김. 색을 바꾸려면 여기만 수정. ===== */
+:root{--ground:#f5f2e9;--surface:#fcfaf3;--surface-2:#e5ece3;--ink:#26332b;--ink-2:#4d6052;--ink-3:#4d6052;--line:#cbd7cc;--accent:#426f52;--accent-soft:#e5ece3;--navy:#203c30;--navy-2:#203c30;--on-navy:#f7f3ea;--on-navy-2:#f7f3ea}
+body{font-size:20px}
+.wrap{max-width:1080px}
+.top,.hero{background:#203c30;color:#f7f3ea}
+.brand,.top .nav a,.top .nav a[aria-current=page]{color:#f7f3ea}
+.home-nav-toggle{color:#f7f3ea;background:transparent}
+.home-fold>summary{min-height:96px}
+.home-fold{margin-bottom:12px}
+.btn-accent,.home-fold-body .btn-accent{background:#426f52;color:#fff}
+.btn-line,.home-fold-body .btn-line{background:#e5ece3;color:#26332b;box-shadow:inset 0 0 0 1px #cbd7cc}
+.home-fold-icon{background:#e5ece3;color:#426f52}
+.qcard p.desc,.bookbody .desc,.prog p,.lect ul,.tocbox p,.sec-head p,.pillar span,.home-fold-body .desc,.home-fold-body .prog p{color:#4d6052}
+footer{background:#e5ece3}
+@media(min-width:1024px){.qgrid.cols3,.books,.progs,.postgrid,.home-fold-body .qgrid.cols3,.home-fold-body .books,.home-fold-body .progs,.home-fold-body .postgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+/* 카드 제목 링크: 모바일에서 누르기 쉽도록 터치 영역 48px 이상 */
+.bookbody .booktitle,.lect h3 a{display:inline-flex;align-items:center;min-height:48px}
+
+/* 홈 화면에 추가 버튼 */
+.home-install{margin-top:14px}
+.home-install-btn{min-height:48px;padding:0 20px;border:1px solid currentColor;border-radius:999px;background:transparent;color:inherit;font:inherit;font-weight:700;cursor:pointer}
+.home-install-help{margin:10px 0 0;line-height:1.7}
+
+.home-install-top{font-size:17px;background:#e5ece3;color:#203c30;padding:10px 16px;border-bottom:1px solid #cbd7cc}
+.home-install-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1100px;margin:0 auto}
+.home-install-row span{flex:1 1 180px;font-weight:700;line-height:1.5}
+.home-install-top .home-install-btn{background:#203c30;color:#fff;border-color:#203c30;min-height:44px;padding:0 16px}
+.home-install-close{min-width:44px;min-height:44px;border:0;background:transparent;color:inherit;font-size:20px;cursor:pointer}
+.home-install-top .home-install-help{font-size:16px;max-width:1100px;margin:6px auto 0}
+/* 강의 목록: 긴 문구가 화면 밖으로 나가 가로 스크롤이 생기던 문제 */
+.lect .who{white-space:normal}
+.lect .who,.lect .fmt{overflow-wrap:anywhere}
