@@ -228,3 +228,8 @@ footer{background:#e5ece3}
 }
 /* 카드 제목 링크: 모바일에서 누르기 쉽도록 터치 영역 48px 이상 */
 .bookbody .booktitle,.lect h3 a{display:inline-flex;align-items:center;min-height:48px}
+
+/* 홈 화면에 추가 버튼 */
+.home-install{margin-top:14px}
+.home-install-btn{min-height:48px;padding:0 20px;border:1px solid currentColor;border-radius:999px;background:transparent;color:inherit;font:inherit;font-weight:700;cursor:pointer}
+.home-install-help{margin:10px 0 0;line-height:1.7}
