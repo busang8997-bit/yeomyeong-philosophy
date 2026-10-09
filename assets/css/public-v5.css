@@ -98,11 +98,11 @@ body{font-size:20px;line-height:1.7}
 .home-fold-body .desc,.home-fold-body .prog p{font-size:20px;color:var(--ink-2);line-height:1.65}
 .home-fold-body .author,.home-fold-body .fmt,.home-fold-body .status,.home-fold-body .who{font-size:18px;color:var(--ink-2)}
 .home-fold-body .qmeta,.home-fold-body .progicon,.home-fold-body .mark{display:none}
-footer{background:#F0E9DA;color:var(--ink-2);border-top:1px solid var(--line);font-size:17px;padding-block:24px}
+footer{background:#F0E9DA;color:var(--ink-2);border-top:1px solid var(--line);font-size:18px;padding-block:24px}
 footer b{color:var(--ink)}
-footer .flinks,footer .fnote{font-size:17px;line-height:1.7}
+footer .flinks,footer .fnote{font-size:18px;line-height:1.7}
 .home-footer-info{border-top:1px solid var(--line);padding-top:12px}
-.home-footer-info>summary{font-size:17px;font-weight:600;cursor:pointer;min-height:48px;padding-block:10px}
+.home-footer-info>summary{font-size:18px;font-weight:600;cursor:pointer;min-height:48px;padding-block:10px}
 .home-footer-info .biz{display:grid;gap:8px;margin-block:12px}
 .home-footer-info .fnote{margin-block:12px}
 footer .flinks a{display:inline-flex;align-items:center;min-height:48px}
@@ -209,20 +209,20 @@ h1,h2,h3{font-family:var(--body)}
    이전에는 홈·질문상담·상담분야·도서·소개 5개 페이지에만 <style>로 복사돼 있던 설정.
    모든 페이지가 같은 색·글자 크기를 쓰도록 이쪽으로 옮김. 색을 바꾸려면 여기만 수정. ===== */
 :root{--ground:#f5f2e9;--surface:#fcfaf3;--surface-2:#e5ece3;--ink:#26332b;--ink-2:#4d6052;--ink-3:#4d6052;--line:#cbd7cc;--accent:#426f52;--accent-soft:#e5ece3;--navy:#203c30;--navy-2:#203c30;--on-navy:#f7f3ea;--on-navy-2:#f7f3ea}
-body{font-size:19px}
+body{font-size:22px}
 .wrap{max-width:1080px}
 .top,.hero{background:#203c30;color:#f7f3ea}
 .brand,.top .nav a,.top .nav a[aria-current=page]{color:#f7f3ea}
 .home-nav-toggle{color:#f7f3ea;background:transparent}
-.home-fold-title{font-size:28px}
+.home-fold-title{font-size:32px}
 .home-fold>summary{min-height:96px}
 .home-fold{margin-bottom:12px}
 .btn-accent,.home-fold-body .btn-accent{background:#426f52;color:#fff}
 .btn-line,.home-fold-body .btn-line{background:#e5ece3;color:#26332b;box-shadow:inset 0 0 0 1px #cbd7cc}
 .home-fold-icon{background:#e5ece3;color:#426f52}
-.qcard h3,.lect h3,.prog h3,.bookbody .booktitle,.postbody h4,.home-fold-body h3,.home-fold-body .booktitle,.home-fold-body .postbody h4{font-size:23px}
-.btn,.btn-sm,.home-fold-body .btn,.home-fold-body .btn-sm{font-size:18px}
-.qcard p.desc,.bookbody .desc,.prog p,.lect ul,.tocbox p,.sec-head p,.pillar span,.home-fold-body .desc,.home-fold-body .prog p{font-size:19px;color:#4d6052}
+.qcard h3,.lect h3,.prog h3,.bookbody .booktitle,.postbody h4,.home-fold-body h3,.home-fold-body .booktitle,.home-fold-body .postbody h4{font-size:26px}
+.btn,.btn-sm,.home-fold-body .btn,.home-fold-body .btn-sm{font-size:19px}
+.qcard p.desc,.bookbody .desc,.prog p,.lect ul,.tocbox p,.sec-head p,.pillar span,.home-fold-body .desc,.home-fold-body .prog p{font-size:22px;color:#4d6052}
 footer{background:#e5ece3}
 @media(min-width:1024px){.qgrid.cols3,.books,.progs,.postgrid,.home-fold-body .qgrid.cols3,.home-fold-body .books,.home-fold-body .progs,.home-fold-body .postgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
