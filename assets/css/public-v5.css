@@ -233,3 +233,10 @@ footer{background:#e5ece3}
 .home-install{margin-top:14px}
 .home-install-btn{min-height:48px;padding:0 20px;border:1px solid currentColor;border-radius:999px;background:transparent;color:inherit;font:inherit;font-weight:700;cursor:pointer}
 .home-install-help{margin:10px 0 0;line-height:1.7}
+
+.home-install-top{font-size:17px;background:#e5ece3;color:#203c30;padding:10px 16px;border-bottom:1px solid #cbd7cc}
+.home-install-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1100px;margin:0 auto}
+.home-install-row span{flex:1 1 180px;font-weight:700;line-height:1.5}
+.home-install-top .home-install-btn{background:#203c30;color:#fff;border-color:#203c30;min-height:44px;padding:0 16px}
+.home-install-close{min-width:44px;min-height:44px;border:0;background:transparent;color:inherit;font-size:20px;cursor:pointer}
+.home-install-top .home-install-help{font-size:16px;max-width:1100px;margin:6px auto 0}
