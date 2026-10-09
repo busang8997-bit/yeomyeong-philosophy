@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "slug": "lecture-wangchobo-lecture",
+      "title": "왕초보 사주 첫걸음 강의",
+      "audience": "사주를 처음 배우는 분",
+      "format": "온라인 녹화 강의 · 전자책 병행",
+      "description": "",
+      "bullets": "오행·간지의 기초 개념\n사주 세우는 법과 육십갑자\n십신의 기본 뜻과 활용",
+      "price": "",
+      "link": "",
+      "video_url": "",
+      "topic": "",
+      "series": ""
+    },
+    {
+      "slug": "lecture-tongbyeon-lecture",
+      "title": "사주통변 실전 강의",
+      "audience": "기초를 마치고 실전 통변을 익히고 싶은 분",
+      "format": "온라인 녹화 강의 · 사례집 병행",
+      "description": "",
+      "bullets": "실제 명식으로 익히는 통변 순서\n십신·신살을 사건으로 옮기는 법\n질문별 통변 연습",
+      "price": "",
+      "link": "",
+      "video_url": "",
+      "topic": "",
+      "series": ""
+    },
+    {
+      "slug": "lecture-tarot-lecture",
+      "title": "여명식 타로 강의",
+      "audience": "타로 상담을 배우고 싶은 분",
+      "format": "온라인 녹화 강의",
+      "description": "",
+      "bullets": "카드 기본 의미와 조합 읽기\n여명식 통변 해석법\n실전 사례 108선 훈련",
+      "price": "",
+      "link": "",
+      "video_url": "",
+      "topic": "",
+      "series": ""
+    }
+  ]
+}

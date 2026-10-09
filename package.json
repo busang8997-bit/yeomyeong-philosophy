@@ -1,0 +1,11 @@
+{
+  "name": "yeomyeong-philosophy",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/build.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

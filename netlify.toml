@@ -1,0 +1,9 @@
+[build]
+  command = "node scripts/build.mjs"
+  publish = "dist"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"

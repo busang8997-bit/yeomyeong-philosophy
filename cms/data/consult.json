@@ -1,0 +1,70 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "slug": "saju",
+      "name": "사주 상담",
+      "icon": "命",
+      "desc": "생년월일시를 바탕으로 질문에 맞는 사주 구조를 짚어 풀이해 드립니다.",
+      "method": "deep",
+      "price": "",
+      "link": "",
+      "order": 1
+    },
+    {
+      "id": 2,
+      "slug": "gunghap",
+      "name": "궁합 상담",
+      "icon": "合",
+      "desc": "두 사람의 사주를 비교해 관계의 흐름과 맞물림을 봅니다.",
+      "method": "deep",
+      "price": "",
+      "link": "",
+      "order": 2
+    },
+    {
+      "id": 3,
+      "slug": "jinro",
+      "name": "진로적성 상담",
+      "icon": "路",
+      "desc": "타고난 사주 구조로 적성과 어울리는 방향을 분석합니다.",
+      "method": "deep",
+      "price": "",
+      "link": "",
+      "order": 3
+    },
+    {
+      "id": 4,
+      "slug": "tarot",
+      "name": "타로 상담",
+      "icon": "✦",
+      "desc": "지금 상황에 맞는 질문을 카드로 풀어 드립니다.",
+      "method": "fast",
+      "price": "",
+      "link": "",
+      "order": 4
+    },
+    {
+      "id": 5,
+      "slug": "taekil",
+      "name": "택일",
+      "icon": "日",
+      "desc": "이사·혼인·개업·출산 등 목적에 맞는 좋은 날을 골라 드립니다.",
+      "method": "deep",
+      "price": "",
+      "link": "",
+      "order": 5
+    },
+    {
+      "id": 6,
+      "slug": "etc",
+      "name": "기타 상담",
+      "icon": "問",
+      "desc": "관상·손금 등 사진으로 보는 상담을 포함해 분류가 애매한 질문을 다룹니다.",
+      "method": "deep",
+      "price": "",
+      "link": "",
+      "order": 6
+    }
+  ]
+}
