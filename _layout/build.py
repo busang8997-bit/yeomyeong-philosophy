@@ -21,6 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PREFIX_TO_MENU = {"book-": "books.html", "lecture-": "lectures.html"}
+SHELL = ROOT / "cms" / "detail-shell.html"   # 관리자 빌드가 도서·강의 상세 페이지를 만들 때 쓰는 틀
 
 
 def load(name, tag):
@@ -67,11 +68,17 @@ FOOTER = load("footer.html", "footer")
 def main():
     check = "--check" in sys.argv
     stale = []
-    for path in sorted(ROOT.glob("*.html")):
+    targets = sorted(ROOT.glob("*.html")) + [SHELL]
+    for path in targets:
         old = path.read_text(encoding="utf-8")
-        new = render(path.name, old)
+        if path == SHELL:
+            # 관리자 빌드(scripts/build.mjs)가 이 문자열 순서(aria-current → href)로 도서/강의 메뉴 강조를 바꿔 끼운다.
+            new = render("book-shell.html", old).replace(
+                '<a href="books.html" aria-current="page">', '<a aria-current="page" href="books.html">', 1)
+        else:
+            new = render(path.name, old)
         if new != old:
-            stale.append(path.name)
+            stale.append(str(path.relative_to(ROOT)))
             if not check:
                 path.write_text(new, encoding="utf-8")
     if check:
