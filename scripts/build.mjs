@@ -62,7 +62,7 @@ export function build(root=process.cwd()){
    if(care)s=s.replace(/(<p class="body">)[\s\S]*?(<\/p>)/,`$1${esc(settings.intro)}$2`);
    else s=s.replace('<p>'+esc(defaults.intro)+'</p>','<p>'+esc(settings.intro)+'</p>');
   }
-  s=s.replace('</footer>','<div class="wrap" style="padding:12px 0;font-size:16px"><a href="/admin/">관리자</a></div></footer>');
+  // 공개 페이지에는 관리자 링크를 넣지 않는다(관리자 화면은 /admin/ 주소로 직접 접속).
   // 글자 크기는 공통 CSS(assets/css/public-v5.css)에서만 관리한다. 빌드가 페이지에 스타일을 끼워 넣지 않는다.
   return s;
  }

@@ -31,3 +31,12 @@ test('상세 페이지를 포함한 모든 공개 페이지가 공통 헤더·�
   assert.ok(s.includes('home-footer-info')&&s.includes('home-install-btn'),f+': 공통 푸터와 다름');
  }
 }));
+
+test('공개 페이지 푸터에 관리자 링크를 넣지 않지만 관리자 화면(/admin/)은 배포한다',()=>sandbox(dir=>{
+ const {out}=build(dir);
+ assert.ok(fs.existsSync(path.join(out,'admin','index.html')),'관리자 화면이 배포 폴더에 없음');
+ for(const f of fs.readdirSync(out).filter(f=>f.endsWith('.html'))){
+  const s=fs.readFileSync(path.join(out,f),'utf8');
+  assert.ok(!/href="\/admin\/?"/.test(s)&&!s.includes('>관리자</a>'),f+': 공개 페이지에 관리자 링크가 있음');
+ }
+}));
