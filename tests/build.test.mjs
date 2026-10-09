@@ -15,3 +15,19 @@ test('도서 삭제·추가가 목록에 반영된다',()=>sandbox(dir=>{edit(di
 test('사이트 제목·소개·유튜브 연결을 설정에서 바꾼다',()=>sandbox(dir=>{edit(dir,'settings',v=>{v.site_title='관리자 검수 사이트';v.home_title='관리자 검수 첫 화면';v.intro='관리자 검수 소개';v.youtube_url='https://www.youtube.com/@test';});const {out}=build(dir);const s=fs.readFileSync(path.join(out,'index.html'),'utf8');assert.match(s,/관리자 검수 사이트/);assert.match(s,/관리자 검수 첫 화면/);assert.match(fs.readFileSync(path.join(out,care?'index.html':'about.html'),'utf8'),/관리자 검수 소개/);assert.match(fs.readFileSync(path.join(out,care?'index.html':'content.html'),'utf8'),/https:\/\/www.youtube.com\/@test/);}));
 test('질문·상담·분류 변경과 스크립트 삽입 차단',{skip:care},()=>sandbox(dir=>{edit(dir,'questions',v=>{v.items[0].q='검수 </script><img src=x>';v.items[0].price='11,000원';});const {out}=build(dir);const s=fs.readFileSync(path.join(out,'ask.html'),'utf8');assert.ok(!s.includes('검수 </script>'));assert.match(s,/htmlEscape\(it.q\)/);edit(dir,'questions',v=>{v.items[0].consult='missing';});assert.throws(()=>build(dir),/연결 상담/);}));
 test('유튜브를 열기 전 불러오지 않고 닫으면 중단한다',{skip:!care},()=>sandbox(dir=>{const {out}=build(dir);const s=fs.readFileSync(path.join(out,'index.html'),'utf8');assert.equal((s.match(/<iframe /g)||[]).length,2);assert.equal((s.match(/data-src="https:\/\/www.youtube-nocookie.com\/embed\//g)||[]).length,2);assert.ok(!s.includes('dothome'));assert.match(s,/removeAttribute\('src'\)/);}));
+test('상세 페이지를 포함한 모든 공개 페이지가 공통 헤더·푸터를 쓰고 글자 크기를 빌드에서 덮지 않는다',{skip:care},()=>sandbox(dir=>{
+ const {out}=build(dir);
+ const part=(file,tag)=>fs.readFileSync(path.join(dir,'_layout',file),'utf8').match(new RegExp('<'+tag+'\\b[\\s\\S]*?</'+tag+'>'))[0];
+ const plain=h=>h.replace(/ aria-current="page"/g,'').replace(/\s+/g,' ');
+ const header=plain(part('header.html','header'));const nav=header.match(/<a href="[^"#?]+\.html"/g).length;
+ const pages=fs.readdirSync(out).filter(f=>f.endsWith('.html'));
+ assert.ok(pages.length>=18);
+ for(const f of pages){
+  const s=fs.readFileSync(path.join(out,f),'utf8');
+  assert.ok(!s.includes('mobile-reading-size'),f+': 빌드가 글자 크기 스타일을 끼워 넣음');
+  const got=s.match(/<header\b[\s\S]*?<\/header>/)[0];
+  assert.equal(plain(got),header,f+': 공통 헤더와 다름');
+  assert.equal((plain(got).match(/<a href="[^"#?]+\.html"/g)||[]).length,nav,f+': 메뉴 개수 다름');
+  assert.ok(s.includes('home-footer-info')&&s.includes('home-install-btn'),f+': 공통 푸터와 다름');
+ }
+}));

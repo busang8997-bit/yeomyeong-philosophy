@@ -17,3 +17,8 @@
 4. `python3 _layout/build.py --check`로 어긋난 페이지가 없는지 확인할 수 있습니다.
 
 새 페이지를 만들 때는 기존 페이지를 복사하면 마커가 함께 따라옵니다. 페이지 본문(`<main>`)은 스크립트가 건드리지 않습니다.
+
+### 상세 페이지·글자 크기 관리 원칙
+- 도서·강의 **상세 페이지는 관리자 빌드가 `cms/detail-shell.html` 틀로 새로 만듭니다.** 이 틀의 헤더·푸터도 `_layout/header.html`, `_layout/footer.html`에서 만들어지므로(`python3 _layout/build.py`가 틀까지 함께 갱신), 헤더·푸터는 `_layout/`만 고치면 됩니다.
+- **글자 크기는 `assets/css/public-v5.css` 한 곳에서만** 고칩니다. 배포 빌드(`scripts/build.mjs`)는 페이지에 스타일을 끼워 넣지 않으며, 테스트(`npm test`)가 이를 확인합니다.
+- CSS·JS 주소 뒤의 `?v=` 값을 올릴 때는 `*.html`과 `cms/detail-shell.html`을 함께 바꿉니다.
