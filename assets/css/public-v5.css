@@ -252,3 +252,5 @@ footer{background:#e5ece3}
  .home-page .home-fold-body p,.home-page .home-fold-body li,.home-page .home-fold-body .who,.home-page .home-fold-body .fmt{word-break:keep-all;overflow-wrap:anywhere}
  .home-page .home-fold-body .btn{word-break:keep-all;overflow-wrap:anywhere}
 }
+
+@media(max-width:640px){.home-page .top .nav.home-nav-open{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.home-page .top .nav a{min-width:0;word-break:keep-all;overflow-wrap:anywhere}}
