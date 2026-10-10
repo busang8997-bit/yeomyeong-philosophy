@@ -240,3 +240,15 @@ footer{background:#e5ece3}
 /* 강의 목록: 긴 문구가 화면 밖으로 나가 가로 스크롤이 생기던 문제 */
 .lect .who{white-space:normal}
 .lect .who,.lect .fmt{overflow-wrap:anywhere}
+
+/* Staging mobile review: readable Korean wrapping and compact install notice. */
+@media(max-width:640px){
+ .home-page .home-install-row{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:8px 12px}
+ .home-page .home-install-row>span{grid-column:1;grid-row:1;min-width:0;word-break:keep-all;overflow-wrap:anywhere}
+ .home-page .home-install-row>.home-install-btn{grid-column:1;grid-row:2;justify-self:start;min-height:48px}
+ .home-page .home-install-row>.home-install-close{grid-column:2;grid-row:1 / 3;align-self:start;min-height:48px}
+ .home-page .home-fold-body .qcard,.home-page .home-fold-body .lect,.home-page .home-fold-body .prog,.home-page .bookbody{padding:18px 16px}
+ .home-page .home-fold-body h3,.home-page .booktitle,.home-page .postbody h4{word-break:keep-all;overflow-wrap:anywhere;text-wrap:balance}
+ .home-page .home-fold-body p,.home-page .home-fold-body li,.home-page .home-fold-body .who,.home-page .home-fold-body .fmt{word-break:keep-all;overflow-wrap:anywhere}
+ .home-page .home-fold-body .btn{word-break:keep-all;overflow-wrap:anywhere}
+}
