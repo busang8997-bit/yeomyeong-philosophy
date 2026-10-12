@@ -240,3 +240,11 @@ footer{background:#e5ece3}
 /* 강의 목록: 긴 문구가 화면 밖으로 나가 가로 스크롤이 생기던 문제 */
 .lect .who{white-space:normal}
 .lect .who,.lect .fmt{overflow-wrap:anywhere}
+
+/* Digital library: compact shelves, expandable catalogue and mobile text. */
+.library-shelves{display:grid;gap:32px}.library-shelf>h3{font-size:24px;margin:0 0 16px}
+.library-intro{margin-bottom:28px}.library-intro h2,.library-products h2{font-size:30px;line-height:1.45}
+.library-intro p,.library-products p{overflow-wrap:anywhere}.library-pending{background:var(--surface-2);padding:16px;border-radius:12px}
+.library-products{margin-bottom:32px}.books .cover{aspect-ratio:auto;height:240px;min-height:0}.cover img{max-height:100%;max-width:100%;object-fit:contain}
+.lect{display:flex;flex-direction:column}.lect .ltop{display:block}.lect .who{display:inline-block;margin:8px 0}.lect>.row{margin-top:auto;padding-top:16px}
+@media(max-width:640px){.library-intro h2,.library-products h2{font-size:26px}.library-intro p,.library-products p{font-size:18px;line-height:1.7}.books .cover{height:200px}.bookbody .booktitle{font-size:22px;overflow-wrap:anywhere}.library-shelf>h3{font-size:23px}.home-install-row span{flex-basis:100%}.home-fold-title{font-size:24px}}

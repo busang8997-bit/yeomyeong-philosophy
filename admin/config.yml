@@ -50,7 +50,8 @@
                 {
                   "name": "description",
                   "label": "책 소개",
-                  "widget": "text"
+                  "widget": "text",
+                  "required": false
                 },
                 {
                   "name": "status",
@@ -76,13 +77,13 @@
                 },
                 {
                   "name": "purchase_url",
-                  "label": "구매처 링크",
+                  "label": "단독 상품 그로블 결제 링크 (준비 후 입력)",
                   "widget": "string",
                   "required": false
                 },
                 {
                   "name": "video_url",
-                  "label": "보조·소개 영상 링크",
+                  "label": "공개 보조·소개 영상 링크 (유료 원본 주소 제외)",
                   "widget": "string",
                   "required": false
                 },
@@ -114,6 +115,18 @@
                 {
                   "name": "series",
                   "label": "시리즈",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "volume",
+                  "label": "권차·편명",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "isbn",
+                  "label": "ISBN (있는 도서만)",
                   "widget": "string",
                   "required": false
                 }
@@ -621,6 +634,135 @@
       "editor": {
         "preview": false
       }
+    },
+    {
+      "name": "library",
+      "label": "디지털도서관 안내",
+      "files": [
+        {
+          "name": "library",
+          "label": "구독 안내",
+          "file": "cms/data/library.json",
+          "fields": [
+            {
+              "name": "title",
+              "label": "제목",
+              "widget": "string"
+            },
+            {
+              "name": "intro",
+              "label": "소개",
+              "widget": "text"
+            },
+            {
+              "name": "sales_note",
+              "label": "판매·패키지 안내",
+              "widget": "text"
+            },
+            {
+              "name": "pending_note",
+              "label": "준비 상태 안내",
+              "widget": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "label": "구독·패키지 상품",
+      "files": [
+        {
+          "name": "products",
+          "label": "판매 상품",
+          "file": "cms/data/products.json",
+          "fields": [
+            {
+              "name": "items",
+              "label": "상품",
+              "widget": "list",
+              "summary": "{{fields.title}}",
+              "fields": [
+                {
+                  "name": "id",
+                  "label": "상품 코드",
+                  "widget": "string",
+                  "pattern": [
+                    "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "영문 소문자·숫자·하이픈"
+                  ]
+                },
+                {
+                  "name": "title",
+                  "label": "상품명",
+                  "widget": "string"
+                },
+                {
+                  "name": "type",
+                  "label": "상품 구성",
+                  "widget": "select",
+                  "options": [
+                    "전자책 열람",
+                    "전자책＋영상 보조강의",
+                    "시리즈 열람",
+                    "전체 도서 열람"
+                  ]
+                },
+                {
+                  "name": "description",
+                  "label": "상품 소개",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "book_slugs",
+                  "label": "포함 도서",
+                  "widget": "relation",
+                  "collection": "books",
+                  "file": "books",
+                  "search_fields": [
+                    "items.*.title"
+                  ],
+                  "value_field": "items.*.slug",
+                  "display_fields": [
+                    "items.*.title"
+                  ],
+                  "multiple": true,
+                  "required": false
+                },
+                {
+                  "name": "period",
+                  "label": "열람 기간 (확정 후 입력)",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "price",
+                  "label": "가격 안내 (확정 후 입력)",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "purchase_url",
+                  "label": "그로블 결제 링크",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "status",
+                  "label": "판매 상태",
+                  "widget": "select",
+                  "options": [
+                    "준비중",
+                    "판매중"
+                  ],
+                  "default": "준비중"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
