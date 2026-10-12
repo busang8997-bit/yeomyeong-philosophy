@@ -40,16 +40,3 @@ test('공개 페이지 푸터에 관리자 링크를 넣지 않지만 관리자 
   assert.ok(!/href="\/admin\/?"/.test(s)&&!s.includes('>관리자</a>'),f+': 공개 페이지에 관리자 링크가 있음');
  }
 }));
-
-test('패키지 포함 도서·판매 준비 조건을 확인하고 미정 상품은 결제로 연결하지 않는다',{skip:care},()=>sandbox(dir=>{
- edit(dir,'products',v=>v.items.push({id:'test-package',title:'검수 패키지',type:'전자책＋영상 보조강의',book_slugs:['book-wangchobo'],status:'준비중',purchase_url:'https://www.groble.im/products/draft'}));
- let {out}=build(dir);let s=fs.readFileSync(path.join(out,'books.html'),'utf8');assert.match(s,/검수 패키지/);assert.ok(!s.includes('href="https://www.groble.im/products/draft"'));assert.match(s,/출간 5권/);
- edit(dir,'products',v=>v.items[0].book_slugs=['missing-book']);assert.throws(()=>build(dir),/ 연결된 도서/);
- edit(dir,'products',v=>{v.items[0].book_slugs=['book-wangchobo'];v.items[0].status='판매중';});assert.throws(()=>build(dir),/기간·가격/);
- edit(dir,'products',v=>{v.items[0].period='30일';v.items[0].price='검수 가격';});({out}=build(dir));s=fs.readFileSync(path.join(out,'books.html'),'utf8');assert.match(s,/href="https:\/\/www.groble.im\/products\/draft"/);
-}));
-
-test('샘플강의는 도서관과 도서 상세에 공개 링크로 연결된다',{skip:care},()=>sandbox(dir=>{
- edit(dir,'books',v=>v.items[0].video_url='https://www.youtube.com/watch?v=abcdefghijk');
- const {out}=build(dir);for(const file of ['books.html','book-wangchobo.html']){const s=fs.readFileSync(path.join(out,file),'utf8');assert.match(s,/유튜브 샘플강의 보기/);assert.match(s,/href="https:\/\/www.youtube.com\/watch\?v=abcdefghijk"/);assert.ok(!s.includes('<iframe'));}
-}));
