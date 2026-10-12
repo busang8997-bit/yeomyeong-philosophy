@@ -83,7 +83,7 @@
                 },
                 {
                   "name": "video_url",
-                  "label": "공개 보조·소개 영상 링크 (유료 원본 주소 제외)",
+                  "label": "유튜브 공개 샘플강의 링크 (영상 또는 재생목록)",
                   "widget": "string",
                   "required": false
                 },
@@ -204,7 +204,7 @@
                 },
                 {
                   "name": "video_url",
-                  "label": "공개 영상 링크",
+                  "label": "유튜브 공개 샘플강의 링크 (영상 또는 재생목록)",
                   "widget": "string",
                   "required": false
                 },

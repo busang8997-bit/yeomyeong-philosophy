@@ -248,3 +248,5 @@ footer{background:#e5ece3}
 .library-products{margin-bottom:32px}.books .cover{aspect-ratio:auto;height:240px;min-height:0}.cover img{max-height:100%;max-width:100%;object-fit:contain}
 .lect{display:flex;flex-direction:column}.lect .ltop{display:block}.lect .who{display:inline-block;margin:8px 0}.lect>.row{margin-top:auto;padding-top:16px}
 @media(max-width:640px){.library-intro h2,.library-products h2{font-size:26px}.library-intro p,.library-products p{font-size:18px;line-height:1.7}.books .cover{height:200px}.bookbody .booktitle{font-size:22px;overflow-wrap:anywhere}.library-shelf>h3{font-size:23px}.home-install-row span{flex-basis:100%}.home-fold-title{font-size:24px}}
+
+.library-samples{margin-bottom:32px}.library-samples h2{font-size:30px;line-height:1.45}.library-samples p{overflow-wrap:anywhere}@media(max-width:640px){.library-samples h2{font-size:26px}.library-samples p{font-size:18px;line-height:1.7}}

@@ -48,3 +48,8 @@ test('패키지 포함 도서·판매 준비 조건을 확인하고 미정 상�
  edit(dir,'products',v=>{v.items[0].book_slugs=['book-wangchobo'];v.items[0].status='판매중';});assert.throws(()=>build(dir),/기간·가격/);
  edit(dir,'products',v=>{v.items[0].period='30일';v.items[0].price='검수 가격';});({out}=build(dir));s=fs.readFileSync(path.join(out,'books.html'),'utf8');assert.match(s,/href="https:\/\/www.groble.im\/products\/draft"/);
 }));
+
+test('샘플강의는 도서관과 도서 상세에 공개 링크로 연결된다',{skip:care},()=>sandbox(dir=>{
+ edit(dir,'books',v=>v.items[0].video_url='https://www.youtube.com/watch?v=abcdefghijk');
+ const {out}=build(dir);for(const file of ['books.html','book-wangchobo.html']){const s=fs.readFileSync(path.join(out,file),'utf8');assert.match(s,/유튜브 샘플강의 보기/);assert.match(s,/href="https:\/\/www.youtube.com\/watch\?v=abcdefghijk"/);assert.ok(!s.includes('<iframe'));}
+}));
