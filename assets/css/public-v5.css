@@ -264,3 +264,13 @@ footer{background:#e5ece3}
 @media(max-width:640px){.library-intro h2,.library-products h2{font-size:26px}.library-intro p,.library-products p{font-size:18px;line-height:1.7}.books .cover{height:200px}.bookbody .booktitle{font-size:22px;overflow-wrap:anywhere}.library-shelf>h3{font-size:23px}.home-install-row span{flex-basis:100%}.home-fold-title{font-size:24px}}
 
 .library-samples{margin-bottom:32px}.library-samples h2{font-size:30px;line-height:1.45}.library-samples p{overflow-wrap:anywhere}@media(max-width:640px){.library-samples h2{font-size:26px}.library-samples p{font-size:18px;line-height:1.7}}
+
+/* Series shelves fold on desktop and mobile. */
+.library-shelf{border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.library-shelf>summary{display:flex;align-items:center;gap:12px;min-height:72px;padding:18px 20px;cursor:pointer;font-size:24px;font-weight:700;list-style:none}
+.library-shelf>summary::-webkit-details-marker{display:none}.library-shelf>summary::before{content:'+';font-size:28px;width:24px;flex-shrink:0}.library-shelf[open]>summary::before{content:'−'}
+.shelf-count{margin-left:auto;font-size:17px;white-space:nowrap;color:var(--ink-2)}
+.library-shelf>summary:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+.library-shelf[open]>summary{border-bottom:1px solid var(--line);background:var(--surface-2)}
+.library-shelf>.books{padding:20px}.library-shelf:not([open])>.books{display:none}
+@media(max-width:640px){.library-shelf>summary{font-size:21px;padding:16px;word-break:keep-all;overflow-wrap:anywhere}.library-shelf>.books{padding:14px}.library-shelves{gap:12px}}
