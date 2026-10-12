@@ -70,18 +70,6 @@
                   "required": false
                 },
                 {
-                  "name": "price",
-                  "label": "가격 안내",
-                  "widget": "string",
-                  "required": false
-                },
-                {
-                  "name": "purchase_url",
-                  "label": "단독 상품 그로블 결제 링크 (준비 후 입력)",
-                  "widget": "string",
-                  "required": false
-                },
-                {
                   "name": "video_url",
                   "label": "유튜브 공개 샘플강의 링크 (영상 또는 재생목록)",
                   "widget": "string",
@@ -92,19 +80,6 @@
                   "label": "목차",
                   "widget": "text",
                   "required": false
-                },
-                {
-                  "name": "product_type",
-                  "label": "상품 구성",
-                  "widget": "select",
-                  "options": [
-                    "전자책",
-                    "전자책+보조강의",
-                    "시리즈 학습지+보조강의",
-                    "영상집",
-                    "프로그램"
-                  ],
-                  "default": "전자책"
                 },
                 {
                   "name": "topic",
@@ -141,7 +116,7 @@
     },
     {
       "name": "lectures",
-      "label": "강의·보조영상",
+      "label": "旧 보조영상 자료 (보존)",
       "files": [
         {
           "name": "lectures",
