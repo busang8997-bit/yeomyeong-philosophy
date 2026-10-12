@@ -274,3 +274,7 @@ footer{background:#e5ece3}
 .library-shelf[open]>summary{border-bottom:1px solid var(--line);background:var(--surface-2)}
 .library-shelf>.books{padding:20px}.library-shelf:not([open])>.books{display:none}
 @media(max-width:640px){.library-shelf>summary{font-size:21px;padding:16px;word-break:keep-all;overflow-wrap:anywhere}.library-shelf>.books{padding:14px}.library-shelves{gap:12px}}
+
+/* Compact title covers in series shelves; uploaded covers keep their proportions. */
+.library-shelf .cover{height:120px}.library-shelf .cover .ct{font-size:21px;line-height:1.5;padding:16px;position:static}
+@media(max-width:640px){.library-shelf .cover{height:100px}.library-shelf .cover .ct{font-size:19px;padding:14px}}
