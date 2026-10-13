@@ -1,12 +1,6 @@
 [
   {
     "file": "content.html",
-    "old": "<div class=\"postgrid\"><article class=\"post\"><div class=\"thumb\" style=\"background:#2F5E7A\"><span>사주이론</span></div><div class=\"postbody\"><h4>재다신약, 돈은 보이는데 왜 안 모일까</h4><span class=\"btn btn-line btn-sm\" aria-disabled=\"true\">준비중</span></div></article><article class=\"post\"><div class=\"thumb\" style=\"background:#5E4A6E\"><span>신살</span></div><div class=\"postbody\"><h4>이 신살이 있으면 조심해야 할 것들</h4><span class=\"btn btn-line btn-sm\" aria-disabled=\"true\">준비중</span></div></article><article class=\"post\"><div class=\"thumb\" style=\"background:#7A5A1E\"><span>관상</span></div><div class=\"postbody\"><h4>관상으로 보는 성향과 재물운</h4><span class=\"btn btn-line btn-sm\" aria-disabled=\"true\">준비중</span></div></article></div>",
-    "kind": "content",
-    "type": "blog"
-  },
-  {
-    "file": "content.html",
     "old": "<div class=\"postgrid\"><article class=\"post\"><div class=\"thumb\" style=\"background:#2E5947\"><span>관상 시리즈</span></div><div class=\"postbody\"><h4>현대 관상 오디오도감 1장 · 이마</h4><span class=\"btn btn-line btn-sm\" aria-disabled=\"true\">준비중</span></div></article><article class=\"post\"><div class=\"thumb\" style=\"background:#3B3F7A\"><span>손금 시리즈</span></div><div class=\"postbody\"><h4>생활 손금 도감 · 감정선 보는 법</h4><span class=\"btn btn-line btn-sm\" aria-disabled=\"true\">준비중</span></div></article></div>",
     "kind": "content",
     "type": "video"

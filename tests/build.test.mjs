@@ -85,3 +85,16 @@ test('도서관 시리즈 순서를 맞추고 관상·수상 오디오도감을 
   assert.match(fs.readFileSync(path.join(out,slug+'.html'),'utf8'),new RegExp(title));
  }
 }));
+
+test('영상 메뉴는 블로그 글을 싣지 않고 공개된 보조강의 샘플만 표시한다',{skip:care},()=>sandbox(dir=>{
+ edit(dir,'content',v=>v.items=[
+  {title:'홈페이지에 싣지 않을 블로그 글',type:'blog',tag:'블로그',description:'',link:'https://blog.naver.com/dfc114/1',image:'',color:'#2F5E7A'},
+  {title:'링크가 없는 샘플',type:'video',tag:'샘플',description:'',link:'',image:'',color:'#2E5947'},
+  {title:'전자책 보조강의 샘플',type:'video',tag:'샘플',description:'',link:'https://www.youtube.com/watch?v=abcdefghijk',image:'',color:'#2E5947'}
+ ]);
+ const {out}=build(dir);const page=fs.readFileSync(path.join(out,'content.html'),'utf8');
+ assert.match(page,/영상보조강의 샘플보기/);assert.match(page,/여명철학 유튜브에서 샘플 보기/);
+ assert.ok(!page.includes('홈페이지에 싣지 않을 블로그 글'));assert.ok(!page.includes('링크가 없는 샘플'));
+ assert.match(page,/전자책 보조강의 샘플/);assert.ok(!page.includes('대표 글 · 블로그'));
+ const header=fs.readFileSync(path.join(out,'books.html'),'utf8');assert.match(header,/영상보조강의 샘플보기/);
+}));

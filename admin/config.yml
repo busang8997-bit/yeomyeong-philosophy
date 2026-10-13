@@ -275,16 +275,16 @@
     },
     {
       "name": "content",
-      "label": "영상·블로그",
+      "label": "영상보조강의 샘플",
       "files": [
         {
           "name": "content",
-          "label": "영상·블로그",
+          "label": "영상보조강의 샘플",
           "file": "cms/data/content.json",
           "fields": [
             {
               "name": "items",
-              "label": "영상·블로그",
+              "label": "영상보조강의 샘플",
               "widget": "list",
               "summary": "{{fields.title}}",
               "fields": [
@@ -298,7 +298,6 @@
                   "label": "종류",
                   "widget": "select",
                   "options": [
-                    "blog",
                     "video"
                   ]
                 },
@@ -315,7 +314,7 @@
                 },
                 {
                   "name": "link",
-                  "label": "글·영상 링크",
+                  "label": "유튜브 샘플 영상 링크",
                   "widget": "string",
                   "required": false
                 },
