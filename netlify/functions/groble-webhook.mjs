@@ -4,13 +4,12 @@ import catalog from './_shared/catalog.json' with {type:'json'};
 
 const products=new Map(catalog.map(book=>[book.slug,book]));
 const store=()=>getStore({name:'yeomyeong-reader-access',consistency:'strong'});
-const reply=(statusCode,body)=>({statusCode,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'},body:JSON.stringify(body)});
-const asText=event=>event.isBase64Encoded?Buffer.from(event.body||'','base64').toString('utf8'):String(event.body||'');
+const reply=(status,body)=>Response.json(body,{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
 const amountOf=object=>[object.amount,object.totalAmount,object.total_amount,object.price].map(Number).find(Number.isFinite);
 
-export default async function handler(event){
-  if((event.httpMethod||'POST')!=='POST')return reply(405,{ok:false});
-  const raw=asText(event),signature=event.headers?.['x-groble-signature']||event.headers?.['X-Groble-Signature'];
+export default async function handler(request){
+  if(request.method!=='POST')return reply(405,{ok:false});
+  const raw=await request.text(),signature=request.headers.get('x-groble-signature');
   if(!verifyGrobleSignature(raw,signature,process.env.GROBLE_WEBHOOK_SECRET))return reply(401,{ok:false,error:'invalid_signature'});
   let payload;try{payload=JSON.parse(raw);}catch{return reply(400,{ok:false,error:'invalid_json'});}
   const type=payload.type||payload.event;
@@ -24,10 +23,9 @@ export default async function handler(event){
       if(!/^[a-f0-9]{64}$/.test(reference))return reply(400,{ok:false,error:'missing_seller_reference'});
       const intent=await db.get(`checkout:${reference}`,{type:'json'});
       if(!intent||intent.status!=='pending'||intent.expiresAt<Date.now())return reply(404,{ok:false,error:'checkout_not_found'});
-      const book=products.get(intent.book);
-      if(!book||book.status!=='판매중'||Number.isFinite(amountOf(object))&&amountOf(object)!==intent.expectedAmount)return reply(400,{ok:false,error:'product_mismatch'});
-      const paymentKey=`payment:${paymentId}`;
-      const prior=await db.get(paymentKey,{type:'json'});
+      const book=products.get(intent.book),amount=amountOf(object);
+      if(!book||book.status!=='판매중'||(Number.isFinite(amount)&&amount!==intent.expectedAmount))return reply(400,{ok:false,error:'product_mismatch'});
+      const paymentKey=`payment:${paymentId}`,prior=await db.get(paymentKey,{type:'json'});
       if(prior)return reply(200,{ok:true,duplicate:true});
       const key=`entitlement:${intent.readerHash}:${intent.book}`;
       const entitlement=grantAccess(await db.get(key,{type:'json'}),paymentId,Date.now());
