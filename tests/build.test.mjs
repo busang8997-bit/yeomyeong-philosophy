@@ -9,9 +9,9 @@ function sandbox(fn){const dir=fs.mkdtempSync(path.join(os.tmpdir(),'yeomyeong-c
 function edit(dir,file,fn){const p=path.join(dir,'cms/data',file+'.json');const v=JSON.parse(fs.readFileSync(p,'utf8'));fn(v);fs.writeFileSync(p,JSON.stringify(v));}
 const care=JSON.parse(fs.readFileSync('admin/config.yml','utf8')).backend.repo.endsWith('-care');
 test('관리자 데이터·원본·비밀을 공개 배포물에 복사하지 않는다',()=>sandbox(dir=>{const {out}=build(dir);for(const p of ['cms','scripts','tests','README.md','ADMIN-SETUP.md'])assert.ok(!fs.existsSync(path.join(out,p)));assert.ok(fs.existsSync(path.join(out,'admin/config.yml')));assert.match(fs.readFileSync(path.join(out,'robots.txt'),'utf8'),/Disallow: \/admin\//);}));
-test('도서 수정이 목록과 상세에 반영되며 HTML 삽입을 막는다',()=>sandbox(dir=>{edit(dir,'books',v=>{v.items[0].title='검수 <img src=x onerror=alert(1)>';v.items[0].description='관리자에서 바꾼 소개';if(care)v.items[0].price=12345;else v.items[0].purchase_url='https://www.groble.im/products/test';});if(!care)edit(dir,'products',v=>{Object.assign(v.items[0],{purchase_url:'https://www.groble.im/products/test',period:'30일',price:'검수 가격',status:'판매중'});});const {out}=build(dir);const s=fs.readFileSync(path.join(out,care?'index.html':'books.html'),'utf8');assert.match(s,/검수 &lt;img/);assert.ok(!s.includes('<img src=x onerror'));assert.match(s,/관리자에서 바꾼 소개/);if(care)assert.match(s,/12,345/);else{const d=fs.readFileSync(path.join(out,'book-wangchobo.html'),'utf8');assert.match(d,/관리자에서 바꾼 소개/);assert.match(d,/https:\/\/www.groble.im\/products\/test/);}}));
+test('도서 수정이 목록과 상세에 반영되며 HTML 삽입을 막는다',()=>sandbox(dir=>{edit(dir,'books',v=>{const b=v.items.find(x=>x.slug==='book-wangchobo');b.title='검수 <img src=x onerror=alert(1)>';b.description='관리자에서 바꾼 소개';if(care)b.price=12345;else b.purchase_url='https://www.groble.im/products/test';});if(!care)edit(dir,'products',v=>{const p=v.items.find(x=>x.book_slugs.includes('book-wangchobo'));Object.assign(p,{purchase_url:'https://www.groble.im/products/test',period:'30일',price:'검수 가격',status:'판매중'});});const {out}=build(dir);const s=fs.readFileSync(path.join(out,care?'index.html':'books.html'),'utf8');assert.match(s,/검수 &lt;img/);assert.ok(!s.includes('<img src=x onerror'));assert.match(s,/관리자에서 바꾼 소개/);if(care)assert.match(s,/12,345/);else{const d=fs.readFileSync(path.join(out,'book-wangchobo.html'),'utf8');assert.match(d,/관리자에서 바꾼 소개/);assert.match(d,/https:\/\/www.groble.im\/products\/test/);}}));
 test('위험한 링크는 빌드를 중단한다',()=>sandbox(dir=>{edit(dir,'books',v=>{v.items[0].purchase_url='javascript:alert(1)';});assert.throws(()=>build(dir),/허용되지/);for(const v of ['//attacker.test','https://name:secret@example.com','assets/../../secret'])assert.throws(()=>safeURL(v));}));
-test('도서 삭제·추가가 목록에 반영된다',()=>sandbox(dir=>{edit(dir,'books',v=>{const newBook={...v.items[0],title:'검수용 새 책',slug:'book-new-test',id:'book-new-test'};v.items=v.items.slice(1);v.items.push(newBook);});if(!care)edit(dir,'products',v=>{v.items=v.items.filter(p=>!p.book_slugs.includes('book-wangchobo'));});const {out}=build(dir);const s=fs.readFileSync(path.join(out,care?'index.html':'books.html'),'utf8');assert.match(s,/검수용 새 책/);if(!care){assert.ok(!fs.existsSync(path.join(out,'book-wangchobo.html')));assert.ok(fs.existsSync(path.join(out,'book-new-test.html')));}}));
+test('도서 삭제·추가가 목록에 반영된다',()=>sandbox(dir=>{edit(dir,'books',v=>{const oldBook=v.items.find(x=>x.slug==='book-wangchobo');const newBook={...oldBook,title:'검수용 새 책',slug:'book-new-test',id:'book-new-test'};v.items=v.items.filter(x=>x.slug!=='book-wangchobo');v.items.push(newBook);});if(!care)edit(dir,'products',v=>{v.items=v.items.filter(p=>!p.book_slugs.includes('book-wangchobo'));});const {out}=build(dir);const s=fs.readFileSync(path.join(out,care?'index.html':'books.html'),'utf8');assert.match(s,/검수용 새 책/);if(!care){assert.ok(!fs.existsSync(path.join(out,'book-wangchobo.html')));assert.ok(fs.existsSync(path.join(out,'book-new-test.html')));}}));
 test('사이트 제목·소개·유튜브 연결을 설정에서 바꾼다',()=>sandbox(dir=>{edit(dir,'settings',v=>{v.site_title='관리자 검수 사이트';v.home_title='관리자 검수 첫 화면';v.intro='관리자 검수 소개';v.youtube_url='https://www.youtube.com/@test';});const {out}=build(dir);const s=fs.readFileSync(path.join(out,'index.html'),'utf8');assert.match(s,/관리자 검수 사이트/);assert.match(s,/관리자 검수 첫 화면/);assert.match(fs.readFileSync(path.join(out,care?'index.html':'about.html'),'utf8'),/관리자 검수 소개/);assert.match(fs.readFileSync(path.join(out,care?'index.html':'content.html'),'utf8'),/https:\/\/www.youtube.com\/@test/);}));
 test('질문·상담·분류 변경과 스크립트 삽입 차단',{skip:care},()=>sandbox(dir=>{edit(dir,'questions',v=>{v.items[0].q='검수 </script><img src=x>';v.items[0].price='11,000원';});const {out}=build(dir);const s=fs.readFileSync(path.join(out,'ask.html'),'utf8');assert.ok(!s.includes('검수 </script>'));assert.match(s,/htmlEscape\(it.q\)/);edit(dir,'questions',v=>{v.items[0].consult='missing';});assert.throws(()=>build(dir),/연결 상담/);}));
 test('유튜브를 열기 전 불러오지 않고 닫으면 중단한다',{skip:!care},()=>sandbox(dir=>{const {out}=build(dir);const s=fs.readFileSync(path.join(out,'index.html'),'utf8');assert.equal((s.match(/<iframe /g)||[]).length,2);assert.equal((s.match(/data-src="https:\/\/www.youtube-nocookie.com\/embed\//g)||[]).length,2);assert.ok(!s.includes('dothome'));assert.match(s,/removeAttribute\('src'\)/);}));
@@ -50,7 +50,7 @@ test('현재는 90일 단독 전자책만 안내하고 미정 상품은 결제�
 }));
 
 test('샘플강의는 도서관과 도서 상세에 공개 링크로 연결된다',{skip:care},()=>sandbox(dir=>{
- edit(dir,'books',v=>v.items[0].video_url='https://www.youtube.com/watch?v=abcdefghijk');
+ edit(dir,'books',v=>{v.items.find(x=>x.slug==='book-wangchobo').video_url='https://www.youtube.com/watch?v=abcdefghijk';});
  const {out}=build(dir);for(const file of ['books.html','book-wangchobo.html']){const s=fs.readFileSync(path.join(out,file),'utf8');assert.match(s,/유튜브 샘플강의 보기/);assert.match(s,/href="https:\/\/www.youtube.com\/watch\?v=abcdefghijk"/);assert.ok(!s.includes('<iframe'));}
 }));
 
@@ -71,5 +71,17 @@ test('출간 전자책 다섯 권은 보내준 표지를 목록과 상세 페이
  for(const [slug,file] of [['book-saju-story','book-saju-story-cover.jpg'],['book-wangchobo','book-wangchobo-cover.jpg'],['book-jireumgil','book-jireumgil-sang-cover.jpg'],['book-jireumgil-middle','book-jireumgil-jung-cover.jpg'],['book-jireumgil-lower','book-jireumgil-ha-cover.jpg']]){
   const list=fs.readFileSync(path.join(out,'books.html'),'utf8');const detail=fs.readFileSync(path.join(out,slug+'.html'),'utf8');
   assert.ok(list.includes('/assets/uploads/'+file),slug+': 목록 표지 누락');assert.ok(detail.includes('/assets/uploads/'+file),slug+': 상세 표지 누락');assert.ok(fs.existsSync(path.join(out,'assets/uploads',file)),slug+': 이미지 파일 배포 누락');
+ }
+}));
+
+test('도서관 시리즈 순서를 맞추고 관상·수상 오디오도감을 전자책 목록에 포함한다',{skip:care},()=>sandbox(dir=>{
+ const {out}=build(dir);const list=fs.readFileSync(path.join(out,'books.html'),'utf8');
+ const expected=['사주교양서','사주입문서','사주 분석의 지름길','사주진로적성분석','생활관상오디오도감','현대수상오디오도감'];
+ const positions=expected.map(name=>list.indexOf(`<span>${name}</span>`));
+ assert.ok(positions.every(p=>p>=0),'요청한 시리즈가 도서관에 모두 표시되어야 함');
+ assert.deepEqual(positions,[...positions].sort((a,b)=>a-b),'시리즈 표시 순서가 요청과 다름');
+ for(const [slug,title] of [['book-living-physiognomy-audio-atlas','생활관상오디오도감'],['book-modern-palmistry-audio-atlas','현대수상오디오도감']]){
+  assert.match(list,new RegExp(title));
+  assert.match(fs.readFileSync(path.join(out,slug+'.html'),'utf8'),new RegExp(title));
  }
 }));
