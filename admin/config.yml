@@ -645,7 +645,7 @@
     },
     {
       "name": "products",
-      "label": "구독·패키지 상품",
+      "label": "전자책 판매 상품",
       "files": [
         {
           "name": "products",
@@ -677,7 +677,7 @@
                   "label": "상품 구성",
                   "widget": "select",
                   "options": [
-                    "전자책 열람",
+                    "전자책 단독 열람",
                     "전자책＋영상 보조강의",
                     "시리즈 열람",
                     "전체 도서 열람"
@@ -712,8 +712,14 @@
                   "required": false
                 },
                 {
+                  "name": "regular_price",
+                  "label": "정가",
+                  "widget": "string",
+                  "required": false
+                },
+                {
                   "name": "price",
-                  "label": "가격 안내 (확정 후 입력)",
+                  "label": "출시 기념 판매가",
                   "widget": "string",
                   "required": false
                 },
