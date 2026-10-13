@@ -259,7 +259,7 @@ footer{background:#e5ece3}
 .library-shelves{display:grid;gap:32px}.library-shelf>h3{font-size:24px;margin:0 0 16px}
 .library-intro{margin-bottom:28px}.library-intro h2,.library-products h2{font-size:30px;line-height:1.45}
 .library-intro p,.library-products p{overflow-wrap:anywhere}.library-pending{background:var(--surface-2);padding:16px;border-radius:12px}
-.library-products{margin-bottom:32px}.books .cover{aspect-ratio:auto;height:240px;min-height:0}.cover img{max-height:100%;max-width:100%;object-fit:contain}
+.library-products{margin-bottom:32px}.books .cover{aspect-ratio:auto;height:240px;min-height:0}.cover img{width:auto;height:100%;max-height:100%;max-width:100%;object-fit:contain;align-self:center;display:block}
 .lect{display:flex;flex-direction:column}.lect .ltop{display:block}.lect .who{display:inline-block;margin:8px 0}.lect>.row{margin-top:auto;padding-top:16px}
 @media(max-width:640px){.library-intro h2,.library-products h2{font-size:26px}.library-intro p,.library-products p{font-size:18px;line-height:1.7}.books .cover{height:200px}.bookbody .booktitle{font-size:22px;overflow-wrap:anywhere}.library-shelf>h3{font-size:23px}.home-install-row span{flex-basis:100%}.home-fold-title{font-size:24px}}
 
@@ -276,8 +276,8 @@ footer{background:#e5ece3}
 @media(max-width:640px){.library-shelf>summary{font-size:21px;padding:16px;word-break:keep-all;overflow-wrap:anywhere}.library-shelf>.books{padding:14px}.library-shelves{gap:12px}}
 
 /* Compact title covers in series shelves; uploaded covers keep their proportions. */
-.library-shelf .cover{height:120px}.library-shelf .cover .ct{font-size:21px;line-height:1.5;padding:16px;position:static}
-@media(max-width:640px){.library-shelf .cover{height:100px}.library-shelf .cover .ct{font-size:19px;padding:14px}}
+.library-shelf .cover{height:120px}.library-shelf .cover:not(.cover-text){height:240px}.library-shelf .cover .ct{font-size:21px;line-height:1.5;padding:16px;position:static}
+@media(max-width:640px){.library-shelf .cover{height:100px}.library-shelf .cover:not(.cover-text){height:200px}.library-shelf .cover .ct{font-size:19px;padding:14px}}
 
 /* Text placeholders use the same compact, vertically centred layout in list and detail. */
 .cover.cover-text,.library-shelf .cover.cover-text{height:120px;min-height:0;aspect-ratio:auto;padding:0;justify-content:center;align-items:center}
