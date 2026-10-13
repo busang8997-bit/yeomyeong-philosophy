@@ -51,6 +51,8 @@ test('서버는 관리자 세션을 확인하고 카탈로그·PDF를 비공개 
  const admin=fs.readFileSync(path.join(out,'admin/ebooks.js'),'utf8');
  assert.match(fn,/mode==='admin-session'/);
  assert.match(fn,/verifyGithubAdmin/);
+ assert.match(fn,/async function entitlementFor\(readerHash,slug\)\{const db=store\(\);return db\.get/);
+ assert.ok(!fn.includes('store().then'));
  assert.match(fn,/Set-Cookie/);
  assert.match(fn,/db\.setJSON\('reader:catalog',books\)/);
  assert.match(fn,/db\.set\(`pdf:\$\{slug\}`/);

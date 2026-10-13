@@ -54,7 +54,7 @@ function adminSessionCookie(login){
   return `${ADMIN_COOKIE}=${payload}.${signAdmin(payload)}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=28800`;
 }
 
-async function entitlementFor(readerHash,slug){return store().then(db=>db.get(`entitlement:${readerHash}:${slug}`,{type:'json'}));}
+async function entitlementFor(readerHash,slug){const db=store();return db.get(`entitlement:${readerHash}:${slug}`,{type:'json'});}
 
 export default async function handler(request){
   const url=new URL(request.url),method=request.method.toUpperCase(),mode=url.searchParams.get('mode')||'session';
