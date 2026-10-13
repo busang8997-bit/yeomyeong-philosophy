@@ -55,5 +55,5 @@ test('샘플강의는 도서관과 도서 상세에 공개 링크로 연결된�
 }));
 
 test('홈과 도서 상세는 단독 전자책 판매 준비를 우선 안내한다',{skip:care},()=>sandbox(dir=>{
- const {out}=build(dir);const home=fs.readFileSync(path.join(out,'index.html'),'utf8');assert.match(home,/전자책 90일 열람/);assert.match(home,/영상보조강의 패키지는 추후 추가/);assert.ok(!home.includes('영상 포함 패키지 보기'));assert.ok(!home.includes('010-8178-4013'));const detail=fs.readFileSync(path.join(out,'book-saju-story.html'),'utf8');assert.match(detail,/전자책 단독 열람/);const list=fs.readFileSync(path.join(out,'lectures.html'),'utf8');assert.match(list,/자료 준비 후 추가/);assert.ok(!list.includes('class="prog sales-product"'));
+ const {out}=build(dir);const home=fs.readFileSync(path.join(out,'index.html'),'utf8');assert.match(home,/전자책 90일 열람/);assert.match(home,/영상보조강의 패키지는 추후 추가/);assert.match(home,/사주교양서/);assert.match(home,/사주입문서/);assert.match(home,/타로통변 사례 시리즈/);assert.ok(!home.includes('영상 포함 패키지 보기'));assert.ok(!home.includes('010-8178-4013'));const detail=fs.readFileSync(path.join(out,'book-saju-story.html'),'utf8');assert.match(detail,/전자책 단독 열람/);const list=fs.readFileSync(path.join(out,'lectures.html'),'utf8');assert.match(list,/자료 준비 후 추가/);assert.ok(!list.includes('class="prog sales-product"'));
 }));
