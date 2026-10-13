@@ -1,11 +1,12 @@
 import {randomBytes,timingSafeEqual} from 'node:crypto';
 import {getStore} from '@netlify/blobs';
 import catalog from './_shared/catalog.json' with {type:'json'};
+import readerConfig from './_shared/reader-config.json' with {type:'json'};
 import {accessState,hashReaderId,parseByteRange,READER_BOOKS} from './_shared/reader-core.mjs';
 
 const booksBySlug=new Map(catalog.filter(book=>READER_BOOKS.includes(book.slug)).map(book=>[book.slug,book]));
 const COOKIE='ym_reader_id';
-const store=()=>getStore({name:'yeomyeong-reader-access',consistency:'strong'});
+const store=()=>getStore({name:readerConfig.storeName,consistency:'strong'});
 const securityHeaders={'Cache-Control':'no-store, private','X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Vary':'Cookie'};
 const json=(status,data,headers={})=>Response.json(data,{status,headers:{...securityHeaders,...headers}});
 const parseCookies=value=>Object.fromEntries(String(value||'').split(';').map(part=>{const i=part.indexOf('=');if(i<0)return['',''];try{return[part.slice(0,i).trim(),decodeURIComponent(part.slice(i+1).trim())]}catch{return['',''];}}));

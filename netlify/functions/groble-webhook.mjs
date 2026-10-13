@@ -1,9 +1,10 @@
 import {getStore} from '@netlify/blobs';
 import {accessState,grantAccess,revokePayment,verifyGrobleSignature} from './_shared/reader-core.mjs';
 import catalog from './_shared/catalog.json' with {type:'json'};
+import readerConfig from './_shared/reader-config.json' with {type:'json'};
 
 const products=new Map(catalog.map(book=>[book.slug,book]));
-const store=()=>getStore({name:'yeomyeong-reader-access',consistency:'strong'});
+const store=()=>getStore({name:readerConfig.storeName,consistency:'strong'});
 const reply=(status,body)=>Response.json(body,{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
 const amountOf=object=>[object.amount,object.totalAmount,object.total_amount,object.price].map(Number).find(Number.isFinite);
 
