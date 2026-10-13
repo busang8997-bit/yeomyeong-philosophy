@@ -1,0 +1,49 @@
+import {getStore} from '@netlify/blobs';
+import {accessState,grantAccess,revokePayment,verifyGrobleSignature} from './_shared/reader-core.mjs';
+import catalog from './_shared/catalog.json' with {type:'json'};
+
+const products=new Map(catalog.map(book=>[book.slug,book]));
+const store=()=>getStore({name:'yeomyeong-reader-access',consistency:'strong'});
+const reply=(statusCode,body)=>({statusCode,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'},body:JSON.stringify(body)});
+const asText=event=>event.isBase64Encoded?Buffer.from(event.body||'','base64').toString('utf8'):String(event.body||'');
+const amountOf=object=>[object.amount,object.totalAmount,object.total_amount,object.price].map(Number).find(Number.isFinite);
+
+export default async function handler(event){
+  if((event.httpMethod||'POST')!=='POST')return reply(405,{ok:false});
+  const raw=asText(event),signature=event.headers?.['x-groble-signature']||event.headers?.['X-Groble-Signature'];
+  if(!verifyGrobleSignature(raw,signature,process.env.GROBLE_WEBHOOK_SECRET))return reply(401,{ok:false,error:'invalid_signature'});
+  let payload;try{payload=JSON.parse(raw);}catch{return reply(400,{ok:false,error:'invalid_json'});}
+  const type=payload.type||payload.event;
+  const object=payload.data?.object||payload.data||payload.object||{};
+  const paymentId=String(object.id||object.paymentId||object.payment_id||'');
+  if(!paymentId)return reply(400,{ok:false,error:'missing_payment_id'});
+  try{
+    const db=await store();
+    if(type==='payment.completed'){
+      const reference=String(object.sellerReference||object.seller_reference||'');
+      if(!/^[a-f0-9]{64}$/.test(reference))return reply(400,{ok:false,error:'missing_seller_reference'});
+      const intent=await db.get(`checkout:${reference}`,{type:'json'});
+      if(!intent||intent.status!=='pending'||intent.expiresAt<Date.now())return reply(404,{ok:false,error:'checkout_not_found'});
+      const book=products.get(intent.book);
+      if(!book||book.status!=='판매중'||Number.isFinite(amountOf(object))&&amountOf(object)!==intent.expectedAmount)return reply(400,{ok:false,error:'product_mismatch'});
+      const paymentKey=`payment:${paymentId}`;
+      const prior=await db.get(paymentKey,{type:'json'});
+      if(prior)return reply(200,{ok:true,duplicate:true});
+      const key=`entitlement:${intent.readerHash}:${intent.book}`;
+      const entitlement=grantAccess(await db.get(key,{type:'json'}),paymentId,Date.now());
+      await db.setJSON(key,entitlement);
+      await db.setJSON(paymentKey,{readerHash:intent.readerHash,book:intent.book,createdAt:Date.now()});
+      await db.setJSON(`checkout:${reference}`,{...intent,status:'paid',paymentId});
+      return reply(200,{ok:true,access:accessState(entitlement).allowed});
+    }
+    if(type==='payment.refunded'){
+      const payment=await db.get(`payment:${paymentId}`,{type:'json'});
+      if(!payment)return reply(200,{ok:true,ignored:true});
+      const key=`entitlement:${payment.readerHash}:${payment.book}`;
+      const entitlement=revokePayment(await db.get(key,{type:'json'}),paymentId);
+      await db.setJSON(key,entitlement);
+      return reply(200,{ok:true,access:accessState(entitlement).allowed});
+    }
+    return reply(200,{ok:true,ignored:true});
+  }catch(error){console.error('Groble webhook error',error);return reply(503,{ok:false,error:'storage_unavailable'});}
+}

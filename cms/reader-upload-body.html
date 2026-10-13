@@ -1,0 +1,28 @@
+<main class="reader-main">
+  <section class="reader-panel" aria-labelledby="upload-title">
+    <p class="reader-kicker">관리 전용 · 비공개 저장</p>
+    <h1 id="upload-title">전자책 PDF 등록</h1>
+    <p class="reader-intro">PDF 원고를 공개 웹 폴더나 GitHub에 올리지 않고 비공개 열람 저장소에 등록합니다. 이 페이지에는 업로드 비밀번호를 저장하지 않습니다.</p>
+    <div class="reader-select-row">
+      <label for="upload-book">등록할 책</label>
+      <select id="upload-book">
+        <option value="book-saju-story">여명쌤의 사주팔자 이야기</option>
+        <option value="book-wangchobo">여명쌤의 왕초보 사주 첫걸음</option>
+        <option value="book-jireumgil">사주 분석의 지름길 上</option>
+        <option value="book-jireumgil-middle">사주 분석의 지름길 中</option>
+        <option value="book-jireumgil-lower">사주 분석의 지름길 下</option>
+      </select>
+    </div>
+    <div class="reader-select-row upload-file-row">
+      <label for="upload-file">PDF 파일</label>
+      <input id="upload-file" type="file" accept="application/pdf,.pdf">
+    </div>
+    <div class="reader-select-row upload-key-row">
+      <label for="upload-key">등록 비밀번호</label>
+      <input id="upload-key" type="password" autocomplete="new-password" required>
+    </div>
+    <div class="reader-actions"><button id="upload-start" class="btn btn-accent" type="button">비공개 저장소에 등록</button><a class="btn btn-line" href="reader.html">열람 화면</a></div>
+    <progress id="upload-progress" max="100" value="0" hidden></progress>
+    <div id="upload-message" class="reader-message" role="status" aria-live="polite">등록 비밀번호를 입력한 뒤 PDF를 한 권씩 등록해 주세요.</div>
+  </section>
+</main>

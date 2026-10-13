@@ -1,2 +1,6 @@
 dist/
 node_modules/
+private-books/*.pdf
+.env
+.env.*
+!.env.example
