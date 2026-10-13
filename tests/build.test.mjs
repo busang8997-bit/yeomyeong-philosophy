@@ -76,7 +76,7 @@ test('출간 전자책 다섯 권은 보내준 표지를 목록과 상세 페이
 
 test('도서관 시리즈 순서를 맞추고 관상·수상 오디오도감을 전자책 목록에 포함한다',{skip:care},()=>sandbox(dir=>{
  const {out}=build(dir);const list=fs.readFileSync(path.join(out,'books.html'),'utf8');
- const expected=['사주교양서','사주입문서','사주 분석의 지름길','사주진로적성분석','생활관상오디오도감','현대수상오디오도감'];
+ const expected=['사주교양서','사주입문서','사주 분석의 지름길','사주진로적성분석','생활관상오디오도감','현대수상오디오도감','타로통변 사례 시리즈'];
  const positions=expected.map(name=>list.indexOf(`<span>${name}</span>`));
  assert.ok(positions.every(p=>p>=0),'요청한 시리즈가 도서관에 모두 표시되어야 함');
  assert.deepEqual(positions,[...positions].sort((a,b)=>a-b),'시리즈 표시 순서가 요청과 다름');

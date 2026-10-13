@@ -163,24 +163,6 @@
       "isbn": ""
     },
     {
-      "slug": "book-tarot-training",
-      "title": "타로통변 실전훈련집 10선",
-      "author": "이부상 지음",
-      "description": "",
-      "status": "출간 예정",
-      "color": "#3B3F7A",
-      "image": "",
-      "price": "",
-      "purchase_url": "",
-      "video_url": "",
-      "toc": "",
-      "product_type": "전자책 단독 열람",
-      "topic": "타로",
-      "series": "타로통변 사례 시리즈",
-      "volume": "",
-      "isbn": ""
-    },
-    {
       "slug": "book-living-physiognomy-audio-atlas",
       "title": "생활관상오디오도감",
       "author": "이부상 지음",
@@ -213,6 +195,24 @@
       "product_type": "전자책 단독 열람",
       "topic": "수상",
       "series": "현대수상오디오도감",
+      "volume": "",
+      "isbn": ""
+    },
+    {
+      "slug": "book-tarot-training",
+      "title": "타로통변 실전훈련집 10선",
+      "author": "이부상 지음",
+      "description": "",
+      "status": "출간 예정",
+      "color": "#3B3F7A",
+      "image": "",
+      "price": "",
+      "purchase_url": "",
+      "video_url": "",
+      "toc": "",
+      "product_type": "전자책 단독 열람",
+      "topic": "타로",
+      "series": "타로통변 사례 시리즈",
       "volume": "",
       "isbn": ""
     }
