@@ -4,7 +4,7 @@
 
 ## Netlify 환경 변수
 
-여명철학 staging 프로젝트 `singular-rabanadas-bdad1a`에 다음 변수를 등록합니다. 운영 프로젝트나 다른 사이트에는 등록하지 않습니다.
+Netlify 프로젝트 `singular-rabanadas-bdad1a`에서 **`Branch: staging` 배포 맥락**에만 다음 변수를 등록하고, Scope는 Functions로 지정합니다. 같은 사이트의 운영 배포에는 값을 공유하지 않습니다. 열람 데이터 저장소도 빌드 시 배포 맥락별로 분리됩니다(`yeomyeong-reader-access-staging` 등).
 
 - `GROBLE_WEBHOOK_SECRET`: 그로블 웹훅 서명 검증에 사용할 시크릿
 - `READER_UPLOAD_KEY`: 관리자 PDF 업로드 화면에서 쓸 별도의 긴 비밀번호
@@ -20,7 +20,7 @@
 
 ## 전자책 원고 등록 및 상품 연결
 
-1. Netlify에 변수를 저장한 뒤 staging 배포를 완료합니다.
+1. Netlify 프로젝트에 두 변수를 `Branch: staging` + `Functions` 범위로 저장한 뒤 staging 배포를 완료합니다. 전체 컨텍스트에 공통으로 설정하지 않습니다.
 2. staging의 `/reader-upload.html`에서 책을 선택하고 해당 PDF와 `READER_UPLOAD_KEY`를 입력해 책마다 등록합니다. 업로드는 작은 조각으로 전송되며 파일은 비공개 Blobs 저장소에만 기록됩니다.
 3. 관리자 CMS의 상품별 그로블 결제 URL을 등록하고 상태를 `판매중`, 이용 기간을 `90일 열람`으로 지정합니다.
 4. 다섯 권을 각각 결제 테스트한 뒤 `/reader.html`에서 열람 기간과 페이지 이동·확대·화면 맞춤을 확인합니다.
