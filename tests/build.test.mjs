@@ -41,12 +41,12 @@ test('공개 페이지 푸터에 관리자 링크를 넣지 않지만 관리자 
  }
 }));
 
-test('패키지 포함 도서·판매 준비 조건을 확인하고 미정 상품은 결제로 연결하지 않는다',{skip:care},()=>sandbox(dir=>{
- edit(dir,'products',v=>v.items=[{id:'test-package',title:'검수 패키지',type:'전자책＋영상 보조강의',book_slugs:['book-wangchobo'],status:'준비중',purchase_url:'https://www.groble.im/products/draft'}]);
- let {out}=build(dir);let s=fs.readFileSync(path.join(out,'lectures.html'),'utf8');assert.match(s,/검수 패키지/);assert.ok(!s.includes('href="https://www.groble.im/products/draft"'));assert.match(fs.readFileSync(path.join(out,'books.html'),'utf8'),/출간 5권/);
+test('현재는 90일 단독 전자책만 안내하고 미정 상품은 결제로 연결하지 않는다',{skip:care},()=>sandbox(dir=>{
+ edit(dir,'products',v=>v.items=[{id:'test-ebook',title:'검수 전자책',type:'전자책 단독 열람',description:'전자책 단독 열람 상품',book_slugs:['book-wangchobo'],period:'90일 열람',status:'준비중',purchase_url:'https://www.groble.im/products/draft'}]);
+ let {out}=build(dir);let s=fs.readFileSync(path.join(out,'lectures.html'),'utf8');assert.match(s,/현재는 책별 90일 전자책 열람 상품/);assert.ok(!s.includes('검수 전자책'));assert.ok(!s.includes('href="https://www.groble.im/products/draft"'));assert.match(fs.readFileSync(path.join(out,'book-wangchobo.html'),'utf8'),/전자책 단독 열람/);
  edit(dir,'products',v=>v.items[0].book_slugs=['missing-book']);assert.throws(()=>build(dir),/ 연결된 도서/);
  edit(dir,'products',v=>{v.items[0].book_slugs=['book-wangchobo'];v.items[0].status='판매중';});assert.throws(()=>build(dir),/기간·가격/);
- edit(dir,'products',v=>{v.items[0].period='30일';v.items[0].price='검수 가격';});({out}=build(dir));s=fs.readFileSync(path.join(out,'lectures.html'),'utf8');assert.match(s,/href="https:\/\/www.groble.im\/products\/draft"/);
+ edit(dir,'products',v=>{v.items[0].period='90일';v.items[0].price='검수 가격';});({out}=build(dir));s=fs.readFileSync(path.join(out,'book-wangchobo.html'),'utf8');assert.match(s,/검수 가격/);
 }));
 
 test('샘플강의는 도서관과 도서 상세에 공개 링크로 연결된다',{skip:care},()=>sandbox(dir=>{
@@ -54,6 +54,6 @@ test('샘플강의는 도서관과 도서 상세에 공개 링크로 연결된�
  const {out}=build(dir);for(const file of ['books.html','book-wangchobo.html']){const s=fs.readFileSync(path.join(out,file),'utf8');assert.match(s,/유튜브 샘플강의 보기/);assert.match(s,/href="https:\/\/www.youtube.com\/watch\?v=abcdefghijk"/);assert.ok(!s.includes('<iframe'));}
 }));
 
-test('교양서는 단독·9권은 영상 패키지이며 홈과 하단은 상품 판매 중심이다',{skip:care},()=>sandbox(dir=>{
- const {out}=build(dir);const home=fs.readFileSync(path.join(out,'index.html'),'utf8');assert.match(home,/시리즈별 상품/);assert.ok(!home.includes('온라인 녹화 강의'));assert.ok(!home.includes('010-8178-4013'));const solo=fs.readFileSync(path.join(out,'book-saju-story.html'),'utf8');assert.match(solo,/전자책 단독 상품/);const packageBook=fs.readFileSync(path.join(out,'book-wangchobo.html'),'utf8');assert.match(packageBook,/전자책＋영상 보조강의/);const list=fs.readFileSync(path.join(out,'lectures.html'),'utf8');assert.equal((list.match(/class="prog sales-product"/g)||[]).length,9);
+test('홈과 도서 상세는 단독 전자책 판매 준비를 우선 안내한다',{skip:care},()=>sandbox(dir=>{
+ const {out}=build(dir);const home=fs.readFileSync(path.join(out,'index.html'),'utf8');assert.match(home,/전자책 90일 열람/);assert.match(home,/영상보조강의 패키지는 추후 추가/);assert.ok(!home.includes('영상 포함 패키지 보기'));assert.ok(!home.includes('010-8178-4013'));const detail=fs.readFileSync(path.join(out,'book-saju-story.html'),'utf8');assert.match(detail,/전자책 단독 열람/);const list=fs.readFileSync(path.join(out,'lectures.html'),'utf8');assert.match(list,/자료 준비 후 추가/);assert.ok(!list.includes('class="prog sales-product"'));
 }));
