@@ -65,3 +65,11 @@ test('첫 출간 전자책 다섯 종은 정가와 출시 기념가를 함께 �
   const detail=fs.readFileSync(path.join(out,slug+'.html'),'utf8');assert.ok(detail.includes('90일 열람'),slug+': 이용 기간 누락');assert.ok(detail.includes(sale),slug+': 상세 판매가 누락');
  }
 }));
+
+test('출간 전자책 다섯 권은 보내준 표지를 목록과 상세 페이지에 표시한다',{skip:care},()=>sandbox(dir=>{
+ const {out}=build(dir);
+ for(const [slug,file] of [['book-saju-story','book-saju-story-cover.jpg'],['book-wangchobo','book-wangchobo-cover.jpg'],['book-jireumgil','book-jireumgil-sang-cover.jpg'],['book-jireumgil-middle','book-jireumgil-jung-cover.jpg'],['book-jireumgil-lower','book-jireumgil-ha-cover.jpg']]){
+  const list=fs.readFileSync(path.join(out,'books.html'),'utf8');const detail=fs.readFileSync(path.join(out,slug+'.html'),'utf8');
+  assert.ok(list.includes('/assets/uploads/'+file),slug+': 목록 표지 누락');assert.ok(detail.includes('/assets/uploads/'+file),slug+': 상세 표지 누락');assert.ok(fs.existsSync(path.join(out,'assets/uploads',file)),slug+': 이미지 파일 배포 누락');
+ }
+}));
