@@ -5,23 +5,62 @@ import os from 'node:os';
 import path from 'node:path';
 import {build,safeURL} from '../scripts/build.mjs';
 
-function sandbox(fn){const dir=fs.mkdtempSync(path.join(os.tmpdir(),'yeomyeong-cms-'));try{fs.cpSync(process.cwd(),dir,{recursive:true,filter:p=>!p.includes('/dist')&&!p.includes('/node_modules')});return fn(dir);}finally{fs.rmSync(dir,{recursive:true,force:true});}}
-function edit(dir,file,fn){const p=path.join(dir,'cms/data',file+'.json');const v=JSON.parse(fs.readFileSync(p,'utf8'));fn(v);fs.writeFileSync(p,JSON.stringify(v));}
-const care=JSON.parse(fs.readFileSync('admin/config.yml','utf8')).backend.repo.endsWith('-care');
-test('관리자 데이터·원본·비밀을 공개 배포물에 복사하지 않는다',()=>sandbox(dir=>{const {out}=build(dir);for(const p of ['cms','scripts','tests','README.md','ADMIN-SETUP.md'])assert.ok(!fs.existsSync(path.join(out,p)));assert.ok(fs.existsSync(path.join(out,'admin/config.yml')));assert.match(fs.readFileSync(path.join(out,'robots.txt'),'utf8'),/Disallow: \/admin\//);}));
-test('도서 수정이 목록과 상세에 반영되며 HTML 삽입을 막는다',()=>sandbox(dir=>{edit(dir,'books',v=>{const b=v.items.find(x=>x.slug==='book-wangchobo');b.title='검수 <img src=x onerror=alert(1)>';b.description='관리자에서 바꾼 소개';if(care)b.price=12345;else b.purchase_url='https://www.groble.im/products/test';});if(!care)edit(dir,'products',v=>{const p=v.items.find(x=>x.book_slugs.includes('book-wangchobo'));Object.assign(p,{purchase_url:'https://www.groble.im/products/test',period:'30일',price:'검수 가격',status:'판매중'});});const {out}=build(dir);const s=fs.readFileSync(path.join(out,care?'index.html':'books.html'),'utf8');assert.match(s,/검수 &lt;img/);assert.ok(!s.includes('<img src=x onerror'));assert.match(s,/관리자에서 바꾼 소개/);if(care)assert.match(s,/12,345/);else{const d=fs.readFileSync(path.join(out,'book-wangchobo.html'),'utf8');assert.match(d,/관리자에서 바꾼 소개/);assert.match(d,/https:\/\/www.groble.im\/products\/test/);}}));
-test('위험한 링크는 빌드를 중단한다',()=>sandbox(dir=>{edit(dir,'books',v=>{v.items[0].purchase_url='javascript:alert(1)';});assert.throws(()=>build(dir),/허용되지/);for(const v of ['//attacker.test','https://name:secret@example.com','assets/../../secret'])assert.throws(()=>safeURL(v));}));
-test('도서 삭제·추가가 목록에 반영된다',()=>sandbo…5182 tokens truncated…  return {allowed:active.length>0,expiresAt:active.length?Math.max(...active.map(item=>Number(item.expiresAt))):null};
+function sandbox(fn){
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'yeomyeong-admin-'));
+ try{fs.cpSync(process.cwd(),dir,{recursive:true,filter:p=>!p.includes('/dist')&&!p.includes('/node_modules')&&!p.includes('/.git')});return fn(dir);}
+ finally{fs.rmSync(dir,{recursive:true,force:true});}
 }
 
-export function parseByteRange(header,size,maxLength=512*1024){
-  if(!Number.isSafeInteger(size)||size<0)return null;
-  if(!header)return {start:0,end:Math.min(size-1,maxLength-1)};
-  const match=/^bytes=(\d*)-(\d*)$/.exec(header.trim());
-  if(!match||(!match[1]&&!match[2])||size===0)return null;
-  let start,end;
-  if(!match[1]){const suffix=Number(match[2]);if(!Number.isSafeInteger(suffix)||suffix<=0)return null;start=Math.max(0,size-suffix);end=size-1;}
-  else {start=Number(match[1]);end=match[2]?Number(match[2]):size-1;}
-  if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<0||end<start||start>=size)return null;
-  return {start,end:Math.min(end,size-1,start+maxLength-1)};
-}
+test('관리자는 /admin/ 한 화면에서 기존 GitHub 로그인 후 도서 운영을 한다',()=>sandbox(dir=>{
+ const {out}=build(dir);
+ const page=fs.readFileSync(path.join(out,'admin/index.html'),'utf8');
+ const script=fs.readFileSync(path.join(out,'admin/ebooks.js'),'utf8');
+ const redirect=fs.readFileSync(path.join(out,'admin/ebooks.html'),'utf8');
+ assert.match(page,/도서·판매·영상 관리/);
+ assert.match(page,/decap-cms-user/);
+ assert.match(page,/ebooks\.js/);
+ assert.match(script,/PDF 등록·교체/);
+ assert.match(script,/data-key="price"/);
+ assert.match(script,/data-key="purchase_url"/);
+ assert.match(script,/YouTube 샘플강의 링크/);
+ assert.ok(!page.includes('READER_UPLOAD_KEY')&&!script.includes('READER_UPLOAD_KEY'));
+ assert.match(redirect,/url=\/admin\//);
+}));
+
+test('도서목록은 런타임 카탈로그를 쓰고 상세 구매는 통합 90일 열람실로 연결한다',()=>sandbox(dir=>{
+ const {out}=build(dir);
+ const list=fs.readFileSync(path.join(out,'books.html'),'utf8');
+ const client=fs.readFileSync(path.join(out,'catalog.js'),'utf8');
+ assert.match(list,/id="runtime-catalog"/);
+ assert.match(list,/catalog\.js/);
+ assert.match(client,/mode=catalog/);
+ assert.match(client,/90일 열람/);
+ for(const slug of ['book-saju-story','book-wangchobo','book-jireumgil','book-jireumgil-middle','book-jireumgil-lower']){
+  const detail=fs.readFileSync(path.join(out,`${slug}.html`),'utf8');
+  assert.match(detail,new RegExp(`reader\\.html\\?book=${slug}`));
+  assert.ok(!detail.includes('groble.im'));
+ }
+ const catalog=JSON.parse(fs.readFileSync(path.join(dir,'netlify/functions/_shared/catalog.json'),'utf8'));
+ assert.deepEqual(catalog.map(book=>book.slug),['book-saju-story','book-wangchobo','book-jireumgil','book-jireumgil-middle','book-jireumgil-lower']);
+}));
+
+test('서버는 관리자 세션을 확인하고 카탈로그·PDF를 비공개 런타임 저장소에 쓴다',()=>sandbox(dir=>{
+ const {out}=build(dir);
+ const fn=fs.readFileSync(path.join(dir,'netlify/functions/reader.mjs'),'utf8');
+ const webhook=fs.readFileSync(path.join(dir,'netlify/functions/groble-webhook.mjs'),'utf8');
+ const admin=fs.readFileSync(path.join(out,'admin/ebooks.js'),'utf8');
+ assert.match(fn,/mode==='admin-session'/);
+ assert.match(fn,/verifyGithubAdmin/);
+ assert.match(fn,/Set-Cookie/);
+ assert.match(fn,/db\.setJSON\('reader:catalog',books\)/);
+ assert.match(fn,/db\.set\(`pdf:\$\{slug\}`/);
+ assert.match(fn,/READER_UPLOAD_KEY/);
+ assert.ok(!admin.includes('READER_UPLOAD_KEY')&&!admin.includes('X-Reader-Upload-Key'));
+ assert.match(webhook,/reader:catalog/);
+ assert.match(fn,/전자책 PDF 등록 후 판매를 시작/);
+}));
+
+test('외부 링크 검증은 위험한 URL을 거부한다',()=>{
+ for(const value of ['javascript:alert(1)','//attacker.test','https://name:secret@example.com','assets/../../secret'])assert.throws(()=>safeURL(value));
+ assert.equal(safeURL('https://groble.im/products/book'),'https://groble.im/products/book');
+});

@@ -1,28 +1,25 @@
-# 여명철학 전자책 열람 설정 (staging)
+# 여명철학 전자책 운영
 
-다섯 권의 전자책은 한 열람 화면을 사용하며, 책별 결제가 확인되면 같은 브라우저에 90일 열람 권한을 부여합니다. 원본 PDF는 공개 GitHub 저장소와 `dist`에 포함하지 않고 Netlify Blobs 비공개 저장소에 넣습니다.
+## 관리자 사용
 
-## Netlify 환경 변수
+1. `https://여명철학.kr/admin/`에서 GitHub 운영자 계정으로 로그인합니다.
+2. 같은 화면의 `도서·판매·영상 관리`에서 도서 정보를 추가하거나 수정합니다.
+3. PDF를 등록하거나 교체하고, 가격·그로블 결제 주소·YouTube 샘플강의 주소를 저장합니다.
 
-Netlify 프로젝트 `singular-rabanadas-bdad1a`에서 **`Branch: staging` 배포 맥락**에만 다음 변수를 등록하고, Scope는 Functions로 지정합니다. 같은 사이트의 운영 배포에는 값을 공유하지 않습니다. 열람 데이터 저장소도 빌드 시 배포 맥락별로 분리됩니다(`yeomyeong-reader-access-staging` 등).
+관리자 로그인은 GitHub 저장소 쓰기 권한으로 확인합니다. 관리자 화면이 기존 로그인 세션을 이용해 짧은 운영 세션을 만들며, 업로드 키 입력은 요구하지 않습니다. 업로드 키는 Netlify 함수에서 세션 서명에만 사용합니다.
 
-- `GROBLE_WEBHOOK_SECRET`: 그로블 웹훅 서명 검증에 사용할 시크릿
-- `READER_UPLOAD_KEY`: 관리자 PDF 업로드 화면에서 쓸 별도의 긴 비밀번호
+도서 정보와 PDF는 Netlify Blobs의 비공개 저장소에 보관됩니다. 도서 추가·PDF 교체·가격/결제 주소 변경은 저장 즉시 반영되며 Netlify 환경변수, GitHub 도서 데이터, 재배포를 다시 수정할 필요가 없습니다. 새 도서를 등록하면 도서 목록과 열람실에 표시됩니다.
 
-비밀 값은 GitHub, CMS, 공개 HTML에 저장하지 않습니다.
+PDF는 한 권당 최대 30MB이고, 파일 앞부분을 검사해 PDF만 받습니다. 그로블 결제 완료 웹훅에서 기존과 같이 90일 열람권을 부여하며, 기존 entitlement 기록은 같은 저장소에서 유지됩니다.
 
-## 그로블 웹훅
+## YouTube 영상 링크
 
-- 주소: `https://staging--singular-rabanadas-bdad1a.netlify.app/.netlify/functions/groble-webhook`
-- 수신 이벤트: `payment.completed`, `payment.refunded`
-- 결제 링크는 상품별로 만들고, `sellerReference` 값을 웹훅 결제 정보에 그대로 돌려보내도록 설정합니다.
-- Groble 서명 검증이 켜져 있어야 하며, 결제 성공만 권한을 부여합니다. 환불 이벤트는 해당 결제의 권한을 회수합니다.
+샘플·보조 영상은 YouTube에 올린 뒤 책 정보의 `YouTube 샘플강의 링크`에 주소를 저장합니다. YouTube 도메인 주소만 허용하며, 링크는 도서 목록과 상세 화면에서 연결합니다. 유료 영상 보조강의 패키지의 접근권한/재생 기능은 추후 별도 상품 단계에서 붙입니다.
 
-## 전자책 원고 등록 및 상품 연결
+## 사이트 환경 준비 (최초 1회)
 
-1. Netlify 프로젝트에 두 변수를 `Branch: staging` + `Functions` 범위로 저장한 뒤 staging 배포를 완료합니다. 전체 컨텍스트에 공통으로 설정하지 않습니다.
-2. staging의 `/reader-upload.html`에서 책을 선택하고 해당 PDF와 `READER_UPLOAD_KEY`를 입력해 책마다 등록합니다. 업로드는 작은 조각으로 전송되며 파일은 비공개 Blobs 저장소에만 기록됩니다.
-3. 관리자 CMS의 상품별 그로블 결제 URL을 등록하고 상태를 `판매중`, 이용 기간을 `90일 열람`으로 지정합니다.
-4. 다섯 권을 각각 결제 테스트한 뒤 `/reader.html`에서 열람 기간과 페이지 이동·확대·화면 맞춤을 확인합니다.
+- Netlify Blobs를 사용하는 staging/production 함수 실행 환경
+- `READER_UPLOAD_KEY`: 관리자 운영 세션을 서명하는 기존 secret
+- `GROBLE_WEBHOOK_SECRET`: 결제 webhook 서명을 확인하는 기존 secret
 
-결제 권한은 구매 당시 사용한 브라우저 쿠키에 연결됩니다. 쿠키를 지우거나 다른 기기를 쓰면 현재 설계로는 자동 복구되지 않습니다. PDF 다운로드 버튼은 제공하지 않지만, 웹 열람기 자체가 완전한 복제 방지 DRM은 아닙니다.
+도서를 추가하거나 PDF·가격·결제 링크를 바꿀 때 위 환경 설정을 수정하지 않습니다.

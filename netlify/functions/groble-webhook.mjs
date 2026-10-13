@@ -3,7 +3,6 @@ import {accessState,grantAccess,revokePayment,verifyGrobleSignature} from './_sh
 import catalog from './_shared/catalog.json' with {type:'json'};
 import readerConfig from './_shared/reader-config.json' with {type:'json'};
 
-const products=new Map(catalog.map(book=>[book.slug,book]));
 const store=()=>getStore({name:readerConfig.storeName,consistency:'strong'});
 const reply=(status,body)=>Response.json(body,{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
 const amountOf=object=>[object.amount,object.totalAmount,object.total_amount,object.price].map(Number).find(Number.isFinite);
@@ -19,12 +18,14 @@ export default async function handler(request){
   if(!paymentId)return reply(400,{ok:false,error:'missing_payment_id'});
   try{
     const db=await store();
+    let products=await db.get('reader:catalog',{type:'json'});
+    if(!Array.isArray(products)){products=catalog;await db.setJSON('reader:catalog',products);}
     if(type==='payment.completed'){
       const reference=String(object.sellerReference||object.seller_reference||'');
       if(!/^[a-f0-9]{64}$/.test(reference))return reply(400,{ok:false,error:'missing_seller_reference'});
       const intent=await db.get(`checkout:${reference}`,{type:'json'});
       if(!intent||intent.status!=='pending'||intent.expiresAt<Date.now())return reply(404,{ok:false,error:'checkout_not_found'});
-      const book=products.get(intent.book),amount=amountOf(object);
+      const book=products.find(item=>item.slug===intent.book),amount=amountOf(object);
       if(!book||book.status!=='판매중'||(Number.isFinite(amount)&&amount!==intent.expectedAmount))return reply(400,{ok:false,error:'product_mismatch'});
       const paymentKey=`payment:${paymentId}`,prior=await db.get(paymentKey,{type:'json'});
       if(prior)return reply(200,{ok:true,duplicate:true});
