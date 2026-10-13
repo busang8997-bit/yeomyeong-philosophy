@@ -16,7 +16,7 @@ const isGrobleURL=value=>{try{const url=new URL(value);return url.protocol==='ht
 const isLiveBook=book=>Boolean(book?.published);
 const fixedSecretMatch=(provided,expected)=>{if(!provided||!expected)return false;const left=Buffer.from(String(provided));const right=Buffer.from(expected);return left.length===right.length&&timingSafeEqual(left,right);};
 
-async function entitlementFor(readerHash,slug){return store().then(db=>db.get(`entitlement:${readerHash}:${slug}`,{type:'json'}));}
+async function entitlementFor(readerHash,slug){const db=store();return db.get(`entitlement:${readerHash}:${slug}`,{type:'json'});}
 
 export default async function handler(request){
   const url=new URL(request.url),method=request.method.toUpperCase(),mode=url.searchParams.get('mode')||'session';
@@ -29,7 +29,7 @@ export default async function handler(request){
   if(!readerId){readerId=randomBytes(32).toString('hex');headers['Set-Cookie']=`${COOKIE}=${readerId}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=31536000`;}
   const readerHash=hashReaderId(readerId);
   try{
-    const db=await store();
+    const db=store();
     const books=await Promise.all([...booksBySlug.values()].filter(isLiveBook).map(async book=>{
       const [entitlement,file]=await Promise.all([entitlementFor(readerHash,book.slug),db.getMetadata(`pdf:${book.slug}`)]);
       const grant=accessState(entitlement);
@@ -44,7 +44,7 @@ async function startCheckout(request,url){
   if(!isLiveBook(book))return json(404,{error:'출간된 도서를 찾을 수 없습니다.'});
   if(book.status!=='판매중'||!isGrobleURL(book.purchase_url)||parseWon(book.price)<1)return json(409,{error:'이 도서는 결제 연결을 준비 중입니다.'});
   const readerId=getReaderId(request)||randomBytes(32).toString('hex');
-  const readerHash=hashReaderId(readerId),sellerReference=randomBytes(32).toString('hex'),db=await store();
+  const readerHash=hashReaderId(readerId),sellerReference=randomBytes(32).toString('hex'),db=store();
   await db.setJSON(`checkout:${sellerReference}`,{readerHash,book:book.slug,expectedAmount:parseWon(book.price),createdAt:Date.now(),expiresAt:Date.now()+2*60*60*1000,status:'pending'});
   const checkout=new URL(book.purchase_url);checkout.searchParams.set('ref',sellerReference);
   return new Response(null,{status:303,headers:{...securityHeaders,Location:checkout.toString(),'Set-Cookie':`${COOKIE}=${readerId}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=31536000`}});
@@ -58,7 +58,8 @@ async function servePdf(request,url){
   try{
     const grant=accessState(await entitlementFor(readerHash,slug));
     if(!grant.allowed)return json(403,{error:'유효한 90일 열람권이 없습니다.'});
-    const bytes=await store().then(db=>db.get(`pdf:${slug}`,{type:'arrayBuffer'}));
+    const db=store();
+    const bytes=await db.get(`pdf:${slug}`,{type:'arrayBuffer'});
     if(!bytes)return json(503,{error:'전자책 파일을 비공개 저장소에 연결 중입니다.'});
     const pdf=Buffer.from(bytes),baseHeaders={...securityHeaders,'Content-Type':'application/pdf','Accept-Ranges':'bytes','Content-Disposition':'inline; filename="reading-copy.pdf"'};
     if(request.method.toUpperCase()==='HEAD')return new Response(null,{status:200,headers:{...baseHeaders,'Content-Length':String(pdf.length)}});
@@ -78,7 +79,7 @@ async function uploadPdf(request,url){
   if(!isLiveBook(book)||!READER_BOOKS.includes(slug)||!/^[a-f0-9]{32}$/.test(uploadId)||!Number.isInteger(index)||!Number.isInteger(count)||count<1||count>120||index<0||index>=count)return json(400,{error:'업로드 정보가 올바르지 않습니다.'});
   const chunk=Buffer.from(await request.arrayBuffer());
   if(!chunk.length||chunk.length>512*1024)return json(413,{error:'한 번에 512KB 이하로 나누어 올려 주세요.'});
-  const db=await store(),doneKey=`upload-done:${uploadId}:${slug}`;
+  const db=store(),doneKey=`upload-done:${uploadId}:${slug}`;
   if(await db.get(doneKey,{type:'text'}))return json(200,{ok:true,complete:true});
   const partKey=`upload-part:${uploadId}:${slug}:${index}`;
   await db.set(partKey,chunk);
