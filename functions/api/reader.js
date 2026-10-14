@@ -69,8 +69,9 @@ async function adminTestAccess(request,url,env){
   if(action==='grant'){
     if(!await hasPdf(env,slug))return json(409,{error:'PDF 파일을 먼저 등록해 주세요.'});
     const realActive=(entitlement.payments||[]).some(item=>!String(item.paymentId||'').startsWith('admin-test:')&&!item.refunded&&Number(item.expiresAt)>Date.now());
-    if(realActive&&!existing)return json(409,{error:'이 브라우저에는 실제 열람권이 있어 테스트 열람권을 추가하지 않았습니다.'});
-    const paymentId=existing?.paymentId||`admin-test:${randomBytes(16).toString('hex')}`;
+    const previousTest=(entitlement.payments||[]).find(item=>item.paymentId===existing?.paymentId),activeTest=previousTest&&!previousTest.refunded&&Number(previousTest.expiresAt)>Date.now();
+    if(realActive&&!activeTest)return json(409,{error:'이 브라우저에는 실제 열람권이 있어 테스트 열람권을 추가하지 않았습니다.'});
+    const paymentId=activeTest?existing.paymentId:`admin-test:${randomBytes(16).toString('hex')}`;
     const updated=grantAccess(entitlement,paymentId,Date.now());
     await writeJSON(env.DB,entitlementKey,updated);
     await writeJSON(env.DB,testKey,{paymentId,createdAt:Date.now()});
