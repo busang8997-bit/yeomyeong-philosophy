@@ -3,7 +3,11 @@ pages_build_output_dir = "./dist"
 compatibility_date = "2026-10-14"
 compatibility_flags = ["nodejs_compat"]
 
-# One-time Cloudflare project setup: create D1/R2 resources and bind them in
-# Pages > Settings > Functions. Keep resource IDs and all secrets out of Git.
-# Required bindings: DB (D1), PDF_BUCKET (R2).
+[[d1_databases]]
+binding = "DB"
+database_name = "yeomyeong-db"
+database_id = "f35909bc-d290-4f07-9562-60340e7cb8f2"
+
+# R2 PDF storage is intentionally not bound yet because R2 activation is on hold.
+# Required later: PDF_BUCKET (R2) plus the secrets below.
 # Required secrets: READER_UPLOAD_KEY, GROBLE_WEBHOOK_SECRET.
