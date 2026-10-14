@@ -11,7 +11,9 @@ export async function onRequest({request,env}){
   const raw=await request.text(),signature=request.headers.get('x-groble-signature'),timestamp=request.headers.get('x-groble-timestamp');
   if(!verifyGrobleSignature(raw,signature,env.GROBLE_WEBHOOK_SECRET,Date.now(),timestamp))return reply(401,{ok:false,error:'invalid_signature'});
   let payload;try{payload=JSON.parse(raw);}catch{return reply(400,{ok:false,error:'invalid_json'});}
-  const type=payload.type||payload.event,object=payload.data?.object||payload.data||payload.object||{},paymentId=String(object.merchantUid||object.id||object.paymentId||object.payment_id||'');
+  const type=payload.type||payload.event,eventId=String(payload.id||''),object=payload.data?.object||payload.data||payload.object||{};
+  if(/^evt_test_/i.test(eventId))return reply(200,{ok:true,test:true,eventId,type});
+  const paymentId=String(object.merchantUid||object.id||object.paymentId||object.payment_id||'');
   if(!paymentId)return reply(400,{ok:false,error:'missing_payment_id'});
   try{
     const books=await catalogFor(env);
