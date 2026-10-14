@@ -39,6 +39,11 @@ test('도서목록은 런타임 카탈로그를 쓰고 상세 구매는 통합 9
  assert.match(list,/catalog\.js/);
  assert.match(client,/mode=catalog/);
  assert.match(client,/90일 열람/);
+ assert.match(client,/hasGrobleCheckout/);
+ assert.match(client,/book\.status==='판매중'&&hasGrobleCheckout/);
+ assert.match(client,/90일 열람 구매하기/);
+ assert.match(client,/판매 준비 중/);
+ assert.ok(!client.includes('열람·구매하기'));
  for(const slug of ['book-saju-story','book-wangchobo','book-jireumgil','book-jireumgil-middle','book-jireumgil-lower']){
   const detail=fs.readFileSync(path.join(out,`${slug}.html`),'utf8');
   assert.match(detail,new RegExp(`reader\\.html\\?book=${slug}`));
