@@ -10,6 +10,8 @@ test('Groble 서명은 본문과 5분 이내의 timestamp를 함께 검증한다
   assert.equal(verifyGrobleSignature(body,`t=${timestamp},v1=${digest}`,secret+'x',now),false);
   assert.equal(verifyGrobleSignature(body+' ',`t=${timestamp},v1=${digest}`,secret,now),false);
   assert.equal(verifyGrobleSignature(body,`t=${timestamp-301},v1=${digest}`,secret,now),false);
+  assert.equal(verifyGrobleSignature(body,digest,secret,now,String(timestamp)),true);
+  assert.equal(verifyGrobleSignature(body,digest,secret,now,String(timestamp-301)),false);
 });
 
 test('결제는 책별 90일 권한을 주고 중복 웹훅은 기간을 늘리지 않으며 환불은 회수한다',()=>{

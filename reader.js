@@ -5,7 +5,7 @@ const $=selector=>document.querySelector(selector);
 const select=$('#book-select'),message=$('#access-message'),price=$('#book-price'),openButton=$('#open-book'),buyButton=$('#buy-book'),viewer=$('#viewer');
 const canvas=$('#pdf-page'),context=canvas.getContext('2d');
 let books=[],selected=null,pdf=null,page=1,scale=1,fit=true,renderTask=null;
-const api=(mode,book='')=>`/.netlify/functions/reader?mode=${encodeURIComponent(mode)}${book?`&book=${encodeURIComponent(book)}`:''}`;
+const api=(mode,book='')=>`/api/reader?mode=${encodeURIComponent(mode)}${book?`&book=${encodeURIComponent(book)}`:''}`;
 
 function setMessage(text,state=''){message.textContent=text;message.dataset.state=state;}
 function setSelected(slug){

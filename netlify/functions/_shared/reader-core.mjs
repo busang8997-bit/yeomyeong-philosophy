@@ -11,16 +11,22 @@ export function hashReaderId(readerId){
   return createHash('sha256').update(readerId).digest('hex');
 }
 
-export function parseGrobleSignature(header){
-  if(typeof header!=='string')return null;
-  const values=Object.fromEntries(header.split(',').map(part=>part.trim().split('=',2)));
+export function parseGrobleSignature(signatureHeader,timestampHeader=''){
+  if(typeof signatureHeader!=='string')return null;
+  // Current Groble webhooks send the signature and Unix timestamp separately.
+  if(timestampHeader){
+    if(!/^\d{10}$/.test(String(timestampHeader))||!/^[a-f0-9]{64}$/i.test(signatureHeader))return null;
+    return {timestamp:Number(timestampHeader),signature:signatureHeader.toLowerCase()};
+  }
+  // Continue accepting the legacy combined header during endpoint migration.
+  const values=Object.fromEntries(signatureHeader.split(',').map(part=>part.trim().split('=',2)));
   if(!/^\d{10}$/.test(values.t||'')||!/^[a-f0-9]{64}$/i.test(values.v1||''))return null;
   return {timestamp:Number(values.t),signature:values.v1.toLowerCase()};
 }
 
-export function verifyGrobleSignature(rawBody,header,secret,nowMs=Date.now()){
+export function verifyGrobleSignature(rawBody,header,secret,nowMs=Date.now(),timestampHeader=''){
   if(!secret||typeof rawBody!=='string')return false;
-  const parsed=parseGrobleSignature(header);
+  const parsed=parseGrobleSignature(header,timestampHeader);
   if(!parsed||Math.abs(Math.floor(nowMs/1000)-parsed.timestamp)>MAX_CLOCK_SKEW_SECONDS)return false;
   const expected=createHmac('sha256',secret).update(`${parsed.timestamp}.${rawBody}`).digest();
   const actual=Buffer.from(parsed.signature,'hex');

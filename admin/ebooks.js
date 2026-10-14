@@ -1,5 +1,5 @@
 const $=s=>document.querySelector(s),message=$('#message'),list=$('#books');
-const CHUNK=512*1024,API='/.netlify/functions/reader';
+const CHUNK=512*1024,API='/api/reader';
 let books=[],busy=false;
 function say(text,type=''){message.textContent=text;message.className=`notice ${type}`;}
 function escapeHTML(v=''){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}

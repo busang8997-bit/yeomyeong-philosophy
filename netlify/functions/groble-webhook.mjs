@@ -5,16 +5,16 @@ import readerConfig from './_shared/reader-config.json' with {type:'json'};
 
 const store=()=>getStore({name:readerConfig.storeName,consistency:'strong'});
 const reply=(status,body)=>Response.json(body,{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
-const amountOf=object=>[object.amount,object.totalAmount,object.total_amount,object.price].map(Number).find(Number.isFinite);
+const amountOf=object=>[object.pricing?.finalAmount,object.amount,object.totalAmount,object.total_amount,object.price].map(Number).find(Number.isFinite);
 
 export default async function handler(request){
   if(request.method!=='POST')return reply(405,{ok:false});
-  const raw=await request.text(),signature=request.headers.get('x-groble-signature');
-  if(!verifyGrobleSignature(raw,signature,process.env.GROBLE_WEBHOOK_SECRET))return reply(401,{ok:false,error:'invalid_signature'});
+  const raw=await request.text(),signature=request.headers.get('x-groble-signature'),timestamp=request.headers.get('x-groble-timestamp');
+  if(!verifyGrobleSignature(raw,signature,process.env.GROBLE_WEBHOOK_SECRET,Date.now(),timestamp))return reply(401,{ok:false,error:'invalid_signature'});
   let payload;try{payload=JSON.parse(raw);}catch{return reply(400,{ok:false,error:'invalid_json'});}
   const type=payload.type||payload.event;
   const object=payload.data?.object||payload.data||payload.object||{};
-  const paymentId=String(object.id||object.paymentId||object.payment_id||'');
+  const paymentId=String(object.merchantUid||object.id||object.paymentId||object.payment_id||'');
   if(!paymentId)return reply(400,{ok:false,error:'missing_payment_id'});
   try{
     const db=await store();
