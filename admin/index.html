@@ -1,21 +1,41 @@
 <!doctype html>
 <html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="same-origin"><title>여명철학 운영자</title>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="same-origin">
+<title>여명철학 운영자</title>
 <style>
-:root{--ink:#203d32;--green:#214b3b;--line:#d8e0d9;--paper:#f6f7f4}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:#25352d;font:16px/1.55 system-ui,-apple-system,"Noto Sans KR",sans-serif}#top{background:var(--green);color:white;padding:15px max(20px,calc((100% - 1060px)/2));display:flex;justify-content:space-between;align-items:center;gap:16px}#top a{color:white}#admin-app{max-width:1060px;margin:28px auto;padding:0 16px}h1{font-size:28px;margin:0 0 4px}h2{font-size:19px;margin:0 0 14px}.hint{color:#58665d;margin:0 0 20px}.top-actions{display:flex;align-items:center;gap:14px}.btn{border:0;border-radius:7px;padding:10px 14px;background:var(--green);color:white;font:inherit;font-weight:650;cursor:pointer;text-decoration:none;display:inline-block}.btn.secondary{background:white;color:var(--green);border:1px solid var(--line)}.btn:disabled{opacity:.55;cursor:wait}.panel,.book{background:white;border:1px solid var(--line);border-radius:12px;padding:18px;margin:16px 0}.book{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}.book h2{grid-column:1/-1;margin-bottom:0}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:14px;font-weight:700;color:#42544a}.field input,.field textarea,.field select{width:100%;border:1px solid #c9d4cc;border-radius:6px;padding:9px 10px;font:inherit;background:#fff;color:#1f3027}.field textarea{min-height:78px;resize:vertical}.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.book-footer{grid-column:1/-1;border-top:1px solid #edf0ec;padding-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.badge,.small{font-size:13px;color:#617066}.check{display:flex;align-items:center;gap:8px}.check input{width:auto}.notice{padding:12px 14px;border-radius:8px;background:#eef3ee}.notice.error{background:#fff0ed;color:#9e2d18}.notice.ok{background:#e9f5eb;color:#245936}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.hidden,[hidden]{display:none!important}#nc-root{min-height:calc(100vh - 52px)}#auth-error{max-width:680px;margin:40px auto;padding:20px;background:white;border:1px solid var(--line);border-radius:12px}@media(max-width:650px){#top{padding:14px 16px;align-items:flex-start;flex-direction:column}#admin-app{margin:18px auto}.book{grid-template-columns:1fr;padding:14px}.field.full,.book h2,.book-footer{grid-column:1}.top-actions{width:100%;justify-content:space-between}h1{font-size:24px}}
-</style></head>
+:root{--green:#214b3b;--line:#d8e0d9;--paper:#f6f7f4}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:#25352d;font:16px/1.55 system-ui,-apple-system,"Noto Sans KR",sans-serif}#top{background:var(--green);color:white;padding:15px max(20px,calc((100% - 1060px)/2));display:flex;justify-content:space-between;align-items:center;gap:16px}#top a{color:white}#admin-app,#login-panel{max-width:1060px;margin:28px auto;padding:0 16px}h1{font-size:28px;margin:0 0 4px}h2{font-size:19px;margin:0 0 14px}.hint{color:#58665d;margin:0 0 20px}.top-actions{display:flex;align-items:center;gap:14px}.btn{border:0;border-radius:7px;padding:10px 14px;background:var(--green);color:white;font:inherit;font-weight:650;cursor:pointer;text-decoration:none;display:inline-block}.btn.secondary{background:white;color:var(--green);border:1px solid var(--line)}.btn:disabled{opacity:.55;cursor:wait}.panel,.book{background:white;border:1px solid var(--line);border-radius:12px;padding:18px;margin:16px 0}.book{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}.book h2{grid-column:1/-1;margin-bottom:0}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:14px;font-weight:700;color:#42544a}.field input,.field textarea,.field select{width:100%;border:1px solid #c9d4cc;border-radius:6px;padding:9px 10px;font:inherit;background:#fff;color:#1f3027}.field textarea{min-height:78px;resize:vertical}.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.book-footer{grid-column:1/-1;border-top:1px solid #edf0ec;padding-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.badge,.small{font-size:13px;color:#617066}.check{display:flex;align-items:center;gap:8px}.check input{width:auto}.notice{padding:12px 14px;border-radius:8px;background:#eef3ee}.notice.error{background:#fff0ed;color:#9e2d18}.notice.ok{background:#e9f5eb;color:#245936}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}[hidden]{display:none!important}.login-box{max-width:480px;background:white;border:1px solid var(--line);border-radius:12px;padding:22px}.login-box input{width:100%;border:1px solid #c9d4cc;border-radius:6px;padding:11px 12px;font:inherit;margin:8px 0 12px}@media(max-width:650px){#top{padding:14px 16px;align-items:flex-start;flex-direction:column}#admin-app,#login-panel{margin:18px auto}.book{grid-template-columns:1fr;padding:14px}.field.full,.book h2,.book-footer{grid-column:1}.top-actions{width:100%;justify-content:space-between}h1{font-size:24px}}
+</style>
+</head>
 <body>
 <header id="top"><div><strong>여명철학 운영자</strong>　·　<a href="/">홈페이지 보기</a></div><div class="top-actions"><span id="operator">운영자 로그인</span><button class="btn secondary" id="logout" type="button" hidden>로그아웃</button></div></header>
-<div id="auth-error" hidden><h1>운영자 로그인을 확인하지 못했습니다</h1><p id="auth-error-text">/admin/에서 GitHub 운영자 계정으로 로그인해 주세요.</p><button class="btn" id="login-again" type="button">운영자 로그인 다시 하기</button></div>
+<section id="login-panel">
+  <div class="login-box">
+    <h1>운영자 로그인</h1>
+    <p class="hint">Cloudflare 관리자 비밀번호로 로그인합니다. 한 번 로그인하면 이 브라우저에서 7일 동안 유지됩니다.</p>
+    <form id="login-form">
+      <label for="admin-password"><strong>관리자 비밀번호</strong></label>
+      <input id="admin-password" type="password" autocomplete="current-password" required>
+      <button class="btn" type="submit">로그인</button>
+    </form>
+    <p id="login-message" class="notice" hidden></p>
+  </div>
+</section>
 <main id="admin-app" hidden>
 <h1>도서·판매·영상 관리</h1>
 <p class="hint">도서 등록·수정, PDF 교체, 가격·그로블 주소, 유튜브 샘플강의 링크를 여기서 관리합니다. 저장과 PDF 교체는 즉시 반영되며, 도서를 추가할 때마다 코드 수정이나 재배포를 하지 않습니다.</p>
 <div id="message" class="notice">운영 정보를 불러오고 있습니다.</div>
 <section class="panel"><div class="toolbar"><h2 style="margin:0 auto 0 0">운영 도서 목록</h2><button class="btn secondary" id="add" type="button">도서 추가</button><button class="btn" id="save" type="button">변경사항 저장</button></div><div id="books"></div><p class="small">PDF는 한 권당 최대 30MB입니다. 영상은 YouTube의 샘플강의 링크를 책에 연결할 수 있습니다. 단독 전자책은 결제 완료 후 90일 열람으로 운영됩니다.</p></section>
 </main>
-<div id="nc-root"></div>
-<script>
-(()=>{const key='decap-cms-user',read=()=>{try{return JSON.parse(localStorage.getItem(key)||'null')?.token||''}catch{return ''}},root=document.getElementById('nc-root');if(read()){root.hidden=true;}else{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/decap-cms@3.16.3/dist/decap-cms.js';s.onerror=()=>{document.getElementById('auth-error').hidden=false;document.getElementById('auth-error-text').textContent='로그인 편집기를 불러오지 못했습니다. 네트워크 연결을 확인한 뒤 다시 열어 주세요.'};document.head.append(s);const timer=setInterval(()=>{if(read()){clearInterval(timer);location.reload()}},350);window.addEventListener('pagehide',()=>clearInterval(timer));}window.addEventListener('yeomyeong-admin-ready',()=>{document.getElementById('auth-error').hidden=true;document.getElementById('admin-app').hidden=false;document.getElementById('logout').hidden=false;root.hidden=true;});window.addEventListener('yeomyeong-admin-failed',event=>{document.getElementById('auth-error-text').textContent=event.detail||'운영자 권한을 확인하지 못했습니다.';document.getElementById('auth-error').hidden=false;});document.getElementById('login-again').addEventListener('click',()=>{localStorage.removeItem(key);location.reload()});})();
+<script type="module">
+const loginPanel=document.getElementById('login-panel'),adminApp=document.getElementById('admin-app'),operator=document.getElementById('operator'),logout=document.getElementById('logout'),form=document.getElementById('login-form'),msg=document.getElementById('login-message');
+async function check(){const r=await fetch('/api/reader?mode=admin',{credentials:'same-origin',cache:'no-store'});if(r.ok){loginPanel.hidden=true;adminApp.hidden=false;operator.textContent='운영자 로그인됨';logout.hidden=false;window.dispatchEvent(new Event('yeomyeong-admin-ready'));return true;}return false;}
+form.addEventListener('submit',async e=>{e.preventDefault();msg.hidden=true;const password=document.getElementById('admin-password').value;const r=await fetch('/api/admin-login',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({password})});const data=await r.json().catch(()=>({}));if(!r.ok){msg.textContent=data.error||'로그인에 실패했습니다.';msg.className='notice error';msg.hidden=false;return;}location.reload();});
+logout.addEventListener('click',async()=>{await fetch('/api/reader?mode=admin-logout',{method:'POST',credentials:'same-origin'}).catch(()=>{});location.reload();});
+check().catch(()=>{});
 </script>
 <script type="module" src="./ebooks.js"></script>
 </body></html>
