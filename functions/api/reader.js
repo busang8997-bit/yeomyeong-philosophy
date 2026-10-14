@@ -2,6 +2,7 @@ import {createHmac,randomBytes,timingSafeEqual} from 'node:crypto';
 import {accessState,hashReaderId,parseByteRange} from '../../netlify/functions/_shared/reader-core.mjs';
 import {defaultCatalog} from './_shared/default-catalog.js';
 import {readJSON,readText,removeKey,writeJSON,writeText} from './_shared/d1-store.js';
+import {bunnyBucket} from './_shared/bunny-storage.js';
 
 const READER_COOKIE='ym_reader_id',ADMIN_COOKIE='ym_admin_session';
 const headers={'Cache-Control':'no-store, private','X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Vary':'Cookie'};
@@ -27,7 +28,8 @@ async function githubLogin(token){
   try{const auth={Authorization:`Bearer ${token}`,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};const user=await fetch('https://api.github.com/user',{headers:auth}).then(r=>r.ok?r.json():null);if(!user?.login)return '';const repo=await fetch('https://api.github.com/repos/busang8997-bit/yeomyeong-philosophy',{headers:auth}).then(r=>r.ok?r.json():null);return repo?.permissions?.push?user.login:'';}catch{return '';}
 }
 async function catalogFor(env){let items=await readJSON(env.DB,'reader:catalog');if(!Array.isArray(items)){items=defaultCatalog;await writeJSON(env.DB,'reader:catalog',items);}return items;}
-async function hasPdf(env,slug){return Boolean(await env.PDF_BUCKET.head(slug));}
+const storage=env=>bunnyBucket(env);
+async function hasPdf(env,slug){return Boolean(await storage(env).head(slug));}
 function safeBook(book){return Boolean(book?.published);}
 function pdfObject(slug){return String(slug);}
 
@@ -79,12 +81,12 @@ async function servePdf(request,url,env){
   const hash=hashReaderId(readerId(request));if(!hash)return json(401,{error:'구매한 브라우저에서 열람해 주세요.'});
   const state=accessState(await readJSON(env.DB,`entitlement:${hash}:${slug}`));
   if(!state.allowed)return json(403,{error:'유효한 90일 열람권이 없습니다.'});
-  const head=await env.PDF_BUCKET.head(pdfObject(slug));if(!head)return json(503,{error:'전자책 파일을 비공개 저장소에 연결 중입니다.'});
+  const bucket=storage(env),head=await bucket.head(pdfObject(slug));if(!head)return json(503,{error:'전자책 파일을 비공개 저장소에 연결 중입니다.'});
   const base={...headers,'Content-Type':'application/pdf','Accept-Ranges':'bytes','Content-Disposition':'inline; filename="reading-copy.pdf"'};
   if(request.method.toUpperCase()==='HEAD')return new Response(null,{status:200,headers:{...base,'Content-Length':String(head.size)}});
   const range=parseByteRange(request.headers.get('range'),head.size);
   if(!request.headers.has('range')||!range)return new Response(null,{status:416,headers:{...headers,'Content-Range':`bytes */${head.size}`}});
-  const object=await env.PDF_BUCKET.get(pdfObject(slug),{range:{offset:range.start,length:range.end-range.start+1}});
+  const object=await bucket.get(pdfObject(slug),{range:{offset:range.start,length:range.end-range.start+1}});
   if(!object)return json(503,{error:'전자책 파일을 불러오지 못했습니다.'});
   return new Response(object.body,{status:206,headers:{...base,'Content-Length':String(range.end-range.start+1),'Content-Range':`bytes ${range.start}-${range.end}/${head.size}`}});
 }
@@ -96,16 +98,17 @@ async function uploadPdf(request,url,env){
   const book=(await catalogFor(env)).find(item=>item.slug===slug);if(!book)return json(404,{error:'도서를 먼저 저장해 주세요.'});
   const bytes=await request.arrayBuffer();if(!bytes.byteLength||bytes.byteLength>512*1024)return json(413,{error:'한 번에 512KB 이하로 나누어 올려 주세요.'});
   const done=`upload-done:${upload}:${slug}`;if(await readText(env.DB,done))return json(200,{ok:true,complete:true});
-  await env.PDF_BUCKET.put(`tmp/${upload}/${slug}/${index}`,bytes);
+  const bucket=storage(env);
+  await bucket.put(`tmp/${upload}/${slug}/${index}`,bytes);
   await writeJSON(env.DB,`upload-manifest:${upload}:${slug}`,{count,updatedAt:Date.now()});
-  const keys=Array.from({length:count},(_,n)=>`tmp/${upload}/${slug}/${n}`),heads=await Promise.all(keys.map(key=>env.PDF_BUCKET.head(key)));
+  const keys=Array.from({length:count},(_,n)=>`tmp/${upload}/${slug}/${n}`),heads=await Promise.all(keys.map(key=>bucket.head(key)));
   if(heads.some(x=>!x))return json(200,{ok:true,complete:false,received:index+1,total:count});
-  const parts=await Promise.all(keys.map(async key=>new Uint8Array(await (await env.PDF_BUCKET.get(key)).arrayBuffer())));
+  const parts=await Promise.all(keys.map(async key=>new Uint8Array(await (await bucket.get(key)).arrayBuffer())));
   const size=parts.reduce((sum,part)=>sum+part.length,0);if(size>30*1024*1024)return json(413,{error:'전자책 파일이 허용 크기(30MB)를 넘습니다.'});
   const data=new Uint8Array(size);let offset=0;for(const part of parts){data.set(part,offset);offset+=part.length;}
   if(new TextDecoder().decode(data.subarray(0,5))!=='%PDF-')return json(415,{error:'PDF 파일만 등록할 수 있습니다.'});
-  await env.PDF_BUCKET.put(slug,data,{httpMetadata:{contentType:'application/pdf'},customMetadata:{uploadedAt:new Date().toISOString()}});
-  await Promise.all(keys.map(key=>env.PDF_BUCKET.delete(key)));
+  await bucket.put(slug,data,{httpMetadata:{contentType:'application/pdf'},customMetadata:{uploadedAt:new Date().toISOString()}});
+  await Promise.all(keys.map(key=>bucket.delete(key)));
   await removeKey(env.DB,`upload-manifest:${upload}:${slug}`);await writeText(env.DB,done,'1');
   return json(200,{ok:true,complete:true,book:slug,size});
 }
