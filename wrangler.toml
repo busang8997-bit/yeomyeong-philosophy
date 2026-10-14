@@ -8,6 +8,5 @@ binding = "DB"
 database_name = "yeomyeong-db"
 database_id = "f35909bc-d290-4f07-9562-60340e7cb8f2"
 
-# R2 PDF storage is intentionally not bound yet because R2 activation is on hold.
-# Required later: PDF_BUCKET (R2) plus the secrets below.
-# Required secrets: READER_UPLOAD_KEY, GROBLE_WEBHOOK_SECRET.
+# PDF files are kept in the private Bunny Storage zone yeomyeong-pdf.
+# Required Pages secrets: BUNNY_STORAGE_KEY, READER_UPLOAD_KEY, GROBLE_WEBHOOK_SECRET.

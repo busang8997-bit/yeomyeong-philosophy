@@ -11,18 +11,22 @@ function sandbox(fn){
  finally{fs.rmSync(dir,{recursive:true,force:true});}
 }
 
-test('관리자는 /admin/ 한 화면에서 기존 GitHub 로그인 후 도서 운영을 한다',()=>sandbox(dir=>{
+test('관리자는 /admin/ 로그인 후 도서 운영과 관리자 전용 열람 테스트를 한다',()=>sandbox(dir=>{
  const {out}=build(dir);
  const page=fs.readFileSync(path.join(out,'admin/index.html'),'utf8');
  const script=fs.readFileSync(path.join(out,'admin/ebooks.js'),'utf8');
  const redirect=fs.readFileSync(path.join(out,'admin/ebooks.html'),'utf8');
  assert.match(page,/도서·판매·영상 관리/);
- assert.match(page,/decap-cms-user/);
+ assert.match(page,/관리자 비밀번호/);
+ assert.match(page,/mode=admin/);
  assert.match(page,/ebooks\.js/);
  assert.match(script,/PDF 등록·교체/);
  assert.match(script,/data-key="price"/);
  assert.match(script,/data-key="purchase_url"/);
  assert.match(script,/YouTube 샘플강의 링크/);
+ assert.match(script,/관리자 테스트 열람권 발급/);
+ assert.match(script,/테스트 열람권 회수/);
+ assert.match(script,/admin-test-access/);
  assert.ok(!page.includes('READER_UPLOAD_KEY')&&!script.includes('READER_UPLOAD_KEY'));
  assert.match(redirect,/url=\/admin\//);
 }));

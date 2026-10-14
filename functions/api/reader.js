@@ -1,5 +1,5 @@
 import {createHmac,randomBytes,timingSafeEqual} from 'node:crypto';
-import {accessState,hashReaderId,parseByteRange} from '../../netlify/functions/_shared/reader-core.mjs';
+import {accessState,grantAccess,hashReaderId,parseByteRange,revokePayment} from '../../netlify/functions/_shared/reader-core.mjs';
 import {defaultCatalog} from './_shared/default-catalog.js';
 import {readJSON,readText,removeKey,writeJSON,writeText} from './_shared/d1-store.js';
 import {bunnyBucket} from './_shared/bunny-storage.js';
@@ -44,6 +44,7 @@ export async function onRequest({request,env}){
     }
     if(mode==='admin-logout'&&method==='POST')return json(200,{ok:true},{'Set-Cookie':`${ADMIN_COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`});
     if(mode==='admin'&&(method==='GET'||method==='POST'))return manageCatalog(request,env);
+    if(mode==='admin-test-access'&&method==='POST')return adminTestAccess(request,url,env);
     if(mode==='catalog'&&method==='GET')return publicCatalog(env);
     if(mode==='upload'&&method==='POST')return uploadPdf(request,url,env);
     if(mode==='pdf'&&(method==='GET'||method==='HEAD'))return servePdf(request,url,env);
@@ -51,6 +52,35 @@ export async function onRequest({request,env}){
     if(mode!=='session'||method!=='GET')return json(405,{error:'허용되지 않은 요청입니다.'},{Allow:'GET, POST'});
     return readerSession(request,env);
   }catch(error){console.error('Cloudflare reader error',error);return json(503,{error:'전자책 서비스를 준비 중입니다.'});}
+}
+
+// This route is gated by the existing signed admin session. Test grants use a
+// tagged payment id in the normal entitlement record, so the real webhook path
+// and real payment records are never touched.
+async function adminTestAccess(request,url,env){
+  const login=adminLogin(request,env.READER_UPLOAD_KEY);if(!login)return json(401,{error:'관리자 로그인 후 이용해 주세요.'});
+  const body=await request.json().catch(()=>({})),slug=String(body.book||''),action=String(body.action||'');
+  if(!validSlug(slug)||!['grant','revoke'].includes(action))return json(400,{error:'테스트 열람 정보가 올바르지 않습니다.'});
+  const book=(await catalogFor(env)).find(item=>item.slug===slug);if(!safeBook(book))return json(404,{error:'출간 도서를 찾을 수 없습니다.'});
+  let id=readerId(request),extra={};
+  if(!id){id=randomBytes(32).toString('hex');extra['Set-Cookie']=`${READER_COOKIE}=${id}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=31536000`;}
+  const hash=hashReaderId(id),testKey=`admin-test:${hash}:${slug}`,entitlementKey=`entitlement:${hash}:${slug}`;
+  const entitlement=await readJSON(env.DB,entitlementKey)||{payments:[]},existing=await readJSON(env.DB,testKey);
+  if(action==='grant'){
+    if(!await hasPdf(env,slug))return json(409,{error:'PDF 파일을 먼저 등록해 주세요.'});
+    const realActive=(entitlement.payments||[]).some(item=>!String(item.paymentId||'').startsWith('admin-test:')&&!item.refunded&&Number(item.expiresAt)>Date.now());
+    if(realActive&&!existing)return json(409,{error:'이 브라우저에는 실제 열람권이 있어 테스트 열람권을 추가하지 않았습니다.'});
+    const paymentId=existing?.paymentId||`admin-test:${randomBytes(16).toString('hex')}`;
+    const updated=grantAccess(entitlement,paymentId,Date.now());
+    await writeJSON(env.DB,entitlementKey,updated);
+    await writeJSON(env.DB,testKey,{paymentId,createdAt:Date.now()});
+    const grant=updated.payments.find(item=>item.paymentId===paymentId);
+    return json(200,{ok:true,action,book:slug,expires_at:grant.expiresAt,test:true},extra);
+  }
+  if(!existing?.paymentId)return json(409,{error:'회수할 관리자 테스트 열람권이 없습니다.'});
+  await writeJSON(env.DB,entitlementKey,revokePayment(entitlement,existing.paymentId));
+  await removeKey(env.DB,testKey);
+  return json(200,{ok:true,action,book:slug,expires_at:null,test:true},extra);
 }
 
 async function readerSession(request,env){
