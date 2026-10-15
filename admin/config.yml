@@ -2,7 +2,7 @@
   "backend": {
     "name": "github",
     "repo": "busang8997-bit/yeomyeong-philosophy",
-    "branch": "main",
+    "branch": "staging",
     "site_domain": "xn--v42bn2semfh4j.kr",
     "auth_scope": "public_repo"
   },
@@ -50,7 +50,8 @@
                 {
                   "name": "description",
                   "label": "책 소개",
-                  "widget": "text"
+                  "widget": "text",
+                  "required": false
                 },
                 {
                   "name": "status",
@@ -69,20 +70,8 @@
                   "required": false
                 },
                 {
-                  "name": "price",
-                  "label": "가격 안내",
-                  "widget": "string",
-                  "required": false
-                },
-                {
-                  "name": "purchase_url",
-                  "label": "구매처 링크",
-                  "widget": "string",
-                  "required": false
-                },
-                {
                   "name": "video_url",
-                  "label": "보조·소개 영상 링크",
+                  "label": "유튜브 공개 샘플강의 링크 (영상 또는 재생목록)",
                   "widget": "string",
                   "required": false
                 },
@@ -93,19 +82,6 @@
                   "required": false
                 },
                 {
-                  "name": "product_type",
-                  "label": "상품 구성",
-                  "widget": "select",
-                  "options": [
-                    "전자책",
-                    "전자책+보조강의",
-                    "시리즈 학습지+보조강의",
-                    "영상집",
-                    "프로그램"
-                  ],
-                  "default": "전자책"
-                },
-                {
                   "name": "topic",
                   "label": "주제",
                   "widget": "string",
@@ -114,6 +90,18 @@
                 {
                   "name": "series",
                   "label": "시리즈",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "volume",
+                  "label": "권차·편명",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "isbn",
+                  "label": "ISBN (있는 도서만)",
                   "widget": "string",
                   "required": false
                 }
@@ -128,7 +116,7 @@
     },
     {
       "name": "lectures",
-      "label": "강의·보조영상",
+      "label": "旧 보조영상 자료 (보존)",
       "files": [
         {
           "name": "lectures",
@@ -191,7 +179,7 @@
                 },
                 {
                   "name": "video_url",
-                  "label": "공개 영상 링크",
+                  "label": "유튜브 공개 샘플강의 링크 (영상 또는 재생목록)",
                   "widget": "string",
                   "required": false
                 },
@@ -287,16 +275,16 @@
     },
     {
       "name": "content",
-      "label": "영상·블로그",
+      "label": "영상보조강의 샘플",
       "files": [
         {
           "name": "content",
-          "label": "영상·블로그",
+          "label": "영상보조강의 샘플",
           "file": "cms/data/content.json",
           "fields": [
             {
               "name": "items",
-              "label": "영상·블로그",
+              "label": "영상보조강의 샘플",
               "widget": "list",
               "summary": "{{fields.title}}",
               "fields": [
@@ -310,7 +298,6 @@
                   "label": "종류",
                   "widget": "select",
                   "options": [
-                    "blog",
                     "video"
                   ]
                 },
@@ -327,7 +314,7 @@
                 },
                 {
                   "name": "link",
-                  "label": "글·영상 링크",
+                  "label": "유튜브 샘플 영상 링크",
                   "widget": "string",
                   "required": false
                 },
@@ -621,6 +608,141 @@
       "editor": {
         "preview": false
       }
+    },
+    {
+      "name": "library",
+      "label": "디지털도서관 안내",
+      "files": [
+        {
+          "name": "library",
+          "label": "구독 안내",
+          "file": "cms/data/library.json",
+          "fields": [
+            {
+              "name": "title",
+              "label": "제목",
+              "widget": "string"
+            },
+            {
+              "name": "intro",
+              "label": "소개",
+              "widget": "text"
+            },
+            {
+              "name": "sales_note",
+              "label": "판매·패키지 안내",
+              "widget": "text"
+            },
+            {
+              "name": "pending_note",
+              "label": "준비 상태 안내",
+              "widget": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "label": "전자책 판매 상품",
+      "files": [
+        {
+          "name": "products",
+          "label": "판매 상품",
+          "file": "cms/data/products.json",
+          "fields": [
+            {
+              "name": "items",
+              "label": "상품",
+              "widget": "list",
+              "summary": "{{fields.title}}",
+              "fields": [
+                {
+                  "name": "id",
+                  "label": "상품 코드",
+                  "widget": "string",
+                  "pattern": [
+                    "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "영문 소문자·숫자·하이픈"
+                  ]
+                },
+                {
+                  "name": "title",
+                  "label": "상품명",
+                  "widget": "string"
+                },
+                {
+                  "name": "type",
+                  "label": "상품 구성",
+                  "widget": "select",
+                  "options": [
+                    "전자책 단독 열람",
+                    "전자책＋영상 보조강의",
+                    "시리즈 열람",
+                    "전체 도서 열람"
+                  ]
+                },
+                {
+                  "name": "description",
+                  "label": "상품 소개",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "book_slugs",
+                  "label": "포함 도서",
+                  "widget": "relation",
+                  "collection": "books",
+                  "file": "books",
+                  "search_fields": [
+                    "items.*.title"
+                  ],
+                  "value_field": "items.*.slug",
+                  "display_fields": [
+                    "items.*.title"
+                  ],
+                  "multiple": true,
+                  "required": false
+                },
+                {
+                  "name": "period",
+                  "label": "열람 기간 (확정 후 입력)",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "regular_price",
+                  "label": "정가",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "price",
+                  "label": "출시 기념 판매가",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "purchase_url",
+                  "label": "그로블 결제 링크",
+                  "widget": "string",
+                  "required": false
+                },
+                {
+                  "name": "status",
+                  "label": "판매 상태",
+                  "widget": "select",
+                  "options": [
+                    "준비중",
+                    "판매중"
+                  ],
+                  "default": "준비중"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }

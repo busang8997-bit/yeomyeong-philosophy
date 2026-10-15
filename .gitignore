@@ -1,2 +1,8 @@
 dist/
 node_modules/
+private-books/*.pdf
+.env
+.env.*
+!.env.example
+netlify/functions/_shared/catalog.json
+netlify/functions/_shared/reader-config.json

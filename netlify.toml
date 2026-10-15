@@ -1,6 +1,27 @@
 [build]
   command = "node scripts/build.mjs"
   publish = "dist"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/reader/"
+  to = "/reader.html"
+  status = 200
+
+# Provider-neutral API paths: Netlify keeps serving the existing Functions
+# while the Cloudflare Pages Functions implementation is verified in parallel.
+[[redirects]]
+  from = "/api/reader"
+  to = "/.netlify/functions/reader"
+  status = 200
+
+[[redirects]]
+  from = "/api/groble-webhook"
+  to = "/.netlify/functions/groble-webhook"
+  status = 200
 
 [[headers]]
   for = "/admin/*"

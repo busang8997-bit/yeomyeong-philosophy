@@ -1,0 +1,37 @@
+<main class="reader-main">
+  <section class="reader-panel" aria-labelledby="reader-title">
+    <p class="reader-kicker">90일 열람 · 구매자 전용</p>
+    <h1 id="reader-title">여명철학 전자책 열람실</h1>
+    <p class="reader-intro">출간 전자책을 한 화면에서 선택해 읽을 수 있습니다. 결제한 브라우저에서 열람해 주세요.</p>
+    <div class="reader-select-row">
+      <label for="book-select">읽을 책</label>
+      <select id="book-select" disabled><option>도서 목록을 불러오는 중…</option></select>
+    </div>
+    <p id="book-price" class="reader-price" aria-live="polite"></p>
+    <div id="access-message" class="reader-message" role="status" aria-live="polite">열람 권한을 확인하고 있습니다.</div>
+    <div class="reader-actions">
+      <button id="open-book" class="btn btn-accent" type="button" hidden>전자책 읽기</button>
+      <button id="buy-book" class="btn btn-accent" type="button" hidden>90일 열람권 구매하기</button>
+      <a class="btn btn-line" href="books.html">도서 목록</a>
+    </div>
+    <section id="viewer" class="viewer" aria-label="전자책 PDF 열람기" hidden>
+      <div class="viewer-toolbar">
+        <div class="viewer-page-controls">
+          <button id="prev-page" type="button" aria-label="이전 페이지">이전</button>
+          <label for="page-number" class="visually-hidden">페이지 번호</label>
+          <input id="page-number" type="number" min="1" value="1" inputmode="numeric">
+          <span>/ <span id="page-count">—</span></span>
+          <button id="next-page" type="button" aria-label="다음 페이지">다음</button>
+        </div>
+        <div class="viewer-zoom-controls" aria-label="화면 크기 조절">
+          <button id="zoom-out" type="button" aria-label="축소">−</button>
+          <button id="fit-width" type="button">화면 맞춤</button>
+          <button id="zoom-in" type="button" aria-label="확대">＋</button>
+        </div>
+      </div>
+      <div id="page-status" class="page-status" role="status" aria-live="polite"></div>
+      <div class="page-stage"><canvas id="pdf-page" aria-label="현재 페이지"></canvas></div>
+      <p class="reader-note">열람 권한은 결제 완료일부터 90일간 유지됩니다. PDF 파일 다운로드 버튼은 제공하지 않습니다.</p>
+    </section>
+  </section>
+</main>

@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PREFIX_TO_MENU = {"book-": "books.html", "lecture-": "lectures.html"}
+PREFIX_TO_MENU = {"book-": "books.html"}
 SHELL = ROOT / "cms" / "detail-shell.html"   # 관리자 빌드가 도서·강의 상세 페이지를 만들 때 쓰는 틀
 
 

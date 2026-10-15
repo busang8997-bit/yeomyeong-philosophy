@@ -1,0 +1,72 @@
+[
+  {
+    "slug": "book-saju-story",
+    "title": "여명쌤의 사주팔자 이야기",
+    "author": "이부상 지음",
+    "description": "30년 넘게 사주명리학을 공부하고 20년 이상 상담과 강의를 이어 온 저자의 경험을 바탕으로, 사주 공부의 출발점부터 상담을 대하는 태도와 역학인의 책임까지 살펴보는 사주 교양서입니다. 입문자의 공부 방향, 한국의 사주 문화, 실제 공부와 상담 현장의 경험, 사주 해석의 관점과 삶의 선택을 50편의 글로 담았습니다.",
+    "series": "사주교양서",
+    "cover": "/assets/uploads/book-saju-story-cover.jpg",
+    "video_url": "",
+    "published": true,
+    "price": "8,000원",
+    "regular_price": "20,000원",
+    "status": "준비중",
+    "purchase_url": ""
+  },
+  {
+    "slug": "book-wangchobo",
+    "title": "여명쌤의 왕초보 사주 첫걸음",
+    "author": "이부상 지음",
+    "description": "사주를 처음 공부하는 분이 생년월일시를 바탕으로 사주팔자 명식을 직접 세우는 과정을 배우도록 구성한 입문서입니다. 음양오행, 천간과 지지, 육십갑자와 24절기의 기초부터 사주 구성과 배열, 합충과 십신·십이운성·신살까지 20강으로 익히고, 핵심 요약 도해집으로 다시 확인할 수 있습니다.",
+    "series": "사주입문서",
+    "cover": "/assets/uploads/book-wangchobo-cover.jpg",
+    "video_url": "",
+    "published": true,
+    "price": "9,900원",
+    "regular_price": "25,000원",
+    "status": "준비중",
+    "purchase_url": ""
+  },
+  {
+    "slug": "book-jireumgil",
+    "title": "사주 분석의 지름길 上",
+    "author": "이부상 지음",
+    "description": "왕초보 과정을 마친 학습자가 사주 명식을 순서에 따라 분석하고 기초 통변을 연습하도록 구성한 초급 과정입니다. 음양과 오행, 천간·지지, 십신, 합충과 형·파·해, 신약·신강 등 분석의 기본 틀을 다집니다. 이론을 읽는 데 그치지 않고 명식을 직접 살펴보며 분석 순서를 익히는 데 초점을 둡니다.",
+    "series": "사주 분석의 지름길",
+    "cover": "/assets/uploads/book-jireumgil-sang-cover.jpg",
+    "video_url": "",
+    "published": true,
+    "price": "12,500원",
+    "regular_price": "25,000원",
+    "status": "준비중",
+    "purchase_url": ""
+  },
+  {
+    "slug": "book-jireumgil-middle",
+    "title": "사주 분석의 지름길 中",
+    "author": "이부상 지음",
+    "description": "『사주 분석의 지름길』 초급 上권에서 익힌 기초를 확장하는 중급 과정입니다. 근묘화실과 육친 통변, 천간합·지지합의 작용, 십이운성과 십이신살을 활용한 심리 분석, 육십갑자 일주 구조를 차례로 살펴봅니다.",
+    "series": "사주 분석의 지름길",
+    "cover": "/assets/uploads/book-jireumgil-jung-cover.jpg",
+    "video_url": "",
+    "published": true,
+    "price": "12,500원",
+    "regular_price": "25,000원",
+    "status": "준비중",
+    "purchase_url": ""
+  },
+  {
+    "slug": "book-jireumgil-lower",
+    "title": "사주 분석의 지름길 下",
+    "author": "이부상 지음",
+    "description": "『사주 분석의 지름길』 상·중권에 이은 고급 과정입니다. 형충회합의 작용과 통변, 십이운성 및 신살의 활용을 살피고, 일간대행격과 오행중심체국 등 정격을 벗어나는 명조의 분석 관점도 다룹니다.",
+    "series": "사주 분석의 지름길",
+    "cover": "/assets/uploads/book-jireumgil-ha-cover.jpg",
+    "video_url": "",
+    "published": true,
+    "price": "12,500원",
+    "regular_price": "25,000원",
+    "status": "준비중",
+    "purchase_url": ""
+  }
+]

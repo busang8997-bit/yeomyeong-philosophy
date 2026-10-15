@@ -1,0 +1,144 @@
+{
+  "items": [
+    {
+      "id": "product-book-wangchobo",
+      "title": "여명쌤의 왕초보 사주 첫걸음",
+      "type": "전자책 단독 열람",
+      "description": "전자책 단독 열람 상품",
+      "book_slugs": [
+        "book-wangchobo"
+      ],
+      "period": "90일 열람",
+      "price": "9,900원",
+      "purchase_url": "",
+      "status": "준비중",
+      "regular_price": "25,000원"
+    },
+    {
+      "id": "product-book-saju-story",
+      "title": "여명쌤의 사주팔자 이야기",
+      "type": "전자책 단독 열람",
+      "description": "전자책 단독 열람 상품",
+      "book_slugs": [
+        "book-saju-story"
+      ],
+      "period": "90일 열람",
+      "price": "8,000원",
+      "purchase_url": "",
+      "status": "준비중",
+      "regular_price": "20,000원"
+    },
+    {
+      "id": "product-book-jireumgil",
+      "title": "사주 분석의 지름길 上",
+      "type": "전자책 단독 열람",
+      "description": "전자책 단독 열람 상품",
+      "book_slugs": [
+        "book-jireumgil"
+      ],
+      "period": "90일 열람",
+      "price": "12,500원",
+      "purchase_url": "",
+      "status": "준비중",
+      "regular_price": "25,000원"
+    },
+    {
+      "id": "product-book-jireumgil-middle",
+      "title": "사주 분석의 지름길 中",
+      "type": "전자책 단독 열람",
+      "description": "전자책 단독 열람 상품",
+      "book_slugs": [
+        "book-jireumgil-middle"
+      ],
+      "period": "90일 열람",
+      "price": "12,500원",
+      "purchase_url": "",
+      "status": "준비중",
+      "regular_price": "25,000원"
+    },
+    {
+      "id": "product-book-jireumgil-lower",
+      "title": "사주 분석의 지름길 下",
+      "type": "전자책 단독 열람",
+      "description": "전자책 단독 열람 상품",
+      "book_slugs": [
+        "book-jireumgil-lower"
+      ],
+      "period": "90일 열람",
+      "price": "12,500원",
+      "purchase_url": "",
+      "status": "준비중",
+      "regular_price": "25,000원"
+    },
+    {
+      "id": "product-book-career-theory-1",
+      "title": "사주진로적성분석 이론편 1권",
+      "type": "전자책 단독 열람",
+      "description": "전자책 단독 열람 상품",
+      "book_slugs": [
+        "book-career-theory-1"
+      ],
+      "period": "90일 열람",
+      "price": "",
+      "purchase_url": "",
+      "status": "준비중",
+      "regular_price": ""
+    },
+    {
+      "id": "product-book-career-theory-2",
+      "title": "사주진로적성분석 이론편 2권",
+      "type": "전자책 단독 열람",
+      "description": "전자책 단독 열람 상품",
+      "book_slugs": [
+        "book-career-theory-2"
+      ],
+      "period": "90일 열람",
+      "price": "",
+      "purchase_url": "",
+      "status": "준비중",
+      "regular_price": ""
+    },
+    {
+      "id": "product-book-career-cases-1",
+      "title": "사주진로적성분석 실전사례집 1권",
+      "type": "전자책 단독 열람",
+      "description": "전자책 단독 열람 상품",
+      "book_slugs": [
+        "book-career-cases-1"
+      ],
+      "period": "90일 열람",
+      "price": "",
+      "purchase_url": "",
+      "status": "준비중",
+      "regular_price": ""
+    },
+    {
+      "id": "product-book-career-cases-2",
+      "title": "사주진로적성분석 실전사례집 2권",
+      "type": "전자책 단독 열람",
+      "description": "전자책 단독 열람 상품",
+      "book_slugs": [
+        "book-career-cases-2"
+      ],
+      "period": "90일 열람",
+      "price": "",
+      "purchase_url": "",
+      "status": "준비중",
+      "regular_price": ""
+    },
+    {
+      "id": "product-book-tarot-training",
+      "title": "타로통변 실전훈련집 10선",
+      "type": "전자책 단독 열람",
+      "description": "전자책 단독 열람 상품",
+      "book_slugs": [
+        "book-tarot-training"
+      ],
+      "period": "90일 열람",
+      "price": "",
+      "purchase_url": "",
+      "status": "준비중",
+      "regular_price": ""
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+name = "yeomyeong-philosophy"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-10-14"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "yeomyeong-db"
+database_id = "f35909bc-d290-4f07-9562-60340e7cb8f2"
+
+# PDF files are kept in the private Bunny Storage zone yeomyeong-pdf.
+# Required Pages secrets: BUNNY_STORAGE_KEY, READER_UPLOAD_KEY, GROBLE_WEBHOOK_SECRET.

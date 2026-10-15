@@ -45,7 +45,7 @@ window.addEventListener('appinstalled',hideAll);
 var isHome=/(^|\/)(index\.html)?$/.test(location.pathname);
 var closed=false;try{closed=sessionStorage.getItem(KEY)==='1';}catch(e){}
 var top=document.querySelector('header');
-if(isHome&&top&&!closed){
+if(false&&isHome&&top&&!closed){
  var b=document.createElement('div');b.className='home-install home-install-top';b.hidden=true;
  b.innerHTML='<div class="home-install-row"><span>폰 첫 화면에 아이콘으로 추가해 두세요</span><button type="button" class="home-install-btn">홈 화면에 추가</button><button type="button" class="home-install-close" aria-label="닫기">✕</button></div><p class="home-install-help" role="status" hidden></p>';
  top.parentNode.insertBefore(b,top.nextSibling);
@@ -53,3 +53,5 @@ if(isHome&&top&&!closed){
 var boxes=document.querySelectorAll('.home-install');
 for(var i=0;i<boxes.length;i++)wire(boxes[i]);
 })();
+
+(function(){function openShelf(){const id=location.hash.slice(1);const shelf=document.getElementById(id);if(shelf&&shelf.classList.contains('library-shelf')){shelf.open=true;shelf.scrollIntoView({block:'start'});}}window.addEventListener('hashchange',openShelf);openShelf();})();
