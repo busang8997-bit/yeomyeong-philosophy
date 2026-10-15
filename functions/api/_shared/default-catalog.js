@@ -1,5 +1,5 @@
-import bookData from '../../../cms/data/books.json' with {type: 'json'};
-import productData from '../../../cms/data/products.json' with {type: 'json'};
+import bookData from '../../../cms/data/books.json';
+import productData from '../../../cms/data/products.json';
 
 const publishedSlugs = new Set([
   'book-saju-story',
