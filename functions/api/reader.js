@@ -22,25 +22,23 @@ function adminLogin(request,secret){
   if(a.length!==b.length||!timingSafeEqual(a,b))return '';
   try{const data=JSON.parse(Buffer.from(payload,'base64url').toString());return data.exp>Date.now()&&/^[a-zA-Z0-9-]+$/.test(data.login)?data.login:'';}catch{return '';}
 }
-function sessionCookie(login,secret){const payload=Buffer.from(JSON.stringify({login,exp:Date.now()+8*60*60*1000})).toString('base64url');return `${ADMIN_COOKIE}=${payload}.${signed(payload,secret)}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=28800`;}
-async function githubLogin(token){
-  if(!token||token.length>4096)return '';
-  try{const auth={Authorization:`Bearer ${token}`,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};const user=await fetch('https://api.github.com/user',{headers:auth}).then(r=>r.ok?r.json():null);if(!user?.login)return '';const repo=await fetch('https://api.github.com/repos/busang8997-bit/yeomyeong-philosophy',{headers:auth}).then(r=>r.ok?r.json():null);return repo?.permissions?.push?user.login:'';}catch{return '';}
-}
 async function catalogFor(env){let items=await readJSON(env.DB,'reader:catalog');if(!Array.isArray(items)){items=defaultCatalog;await writeJSON(env.DB,'reader:catalog',items);}return items;}
 const storage=env=>bunnyBucket(env);
 async function hasPdf(env,slug){return Boolean(await storage(env).head(slug));}
+// 관리자 화면용: Bunny 연결 문제(예: Preview에 BUNNY_STORAGE_KEY 없음)가 도서 목록·로그인까지 막지 않도록 null로 표시한다.
+async function pdfStatus(env,slug){try{return await hasPdf(env,slug);}catch(error){console.error('Bunny PDF status error',error);return null;}}
+async function withPdfStatus(env,books){const list=await Promise.all(books.map(async book=>({...book,pdfUploaded:await pdfStatus(env,book.slug)})));return {books:list,storageError:list.some(book=>book.pdfUploaded===null)};}
 function safeBook(book){return Boolean(book?.published);}
 function pdfObject(slug){return String(slug);}
 
 export async function onRequest({request,env}){
   const url=new URL(request.url),method=request.method.toUpperCase(),mode=url.searchParams.get('mode')||'session';
   try{
-    if(mode==='admin-session'&&method==='POST'){
-      const login=await githubLogin(request.headers.get('authorization')?.replace(/^Bearer\s+/i,'')||'');
-      if(!login)return json(401,{error:'여명철학 GitHub 관리자 계정으로 로그인해 주세요.'});
-      if(!env.READER_UPLOAD_KEY)return json(503,{error:'관리자 세션 설정을 확인해 주세요.'});
-      return json(200,{ok:true,login},{'Set-Cookie':sessionCookie(login,env.READER_UPLOAD_KEY)});
+    // 로그인 여부만 확인한다. D1·Bunny를 건드리지 않으므로 저장소 문제와 로그인 문제를 구분할 수 있다.
+    if(mode==='admin-status'&&method==='GET'){
+      if(!env.READER_UPLOAD_KEY)return json(503,{error:'관리자 비밀번호가 이 배포에 적용되지 않았습니다. 설정 후 다시 배포해야 적용됩니다.'});
+      const login=adminLogin(request,env.READER_UPLOAD_KEY);
+      return login?json(200,{ok:true,login}):json(401,{error:'관리자 로그인이 필요합니다.'});
     }
     if(mode==='admin-logout'&&method==='POST')return json(200,{ok:true},{'Set-Cookie':`${ADMIN_COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`});
     if(mode==='admin'&&(method==='GET'||method==='POST'))return manageCatalog(request,env);
@@ -51,7 +49,7 @@ export async function onRequest({request,env}){
     if(mode==='checkout'&&method==='GET')return startCheckout(request,url,env);
     if(mode!=='session'||method!=='GET')return json(405,{error:'허용되지 않은 요청입니다.'},{Allow:'GET, POST'});
     return readerSession(request,env);
-  }catch(error){console.error('Cloudflare reader error',error);return json(503,{error:'전자책 서비스를 준비 중입니다.'});}
+  }catch(error){console.error('Cloudflare reader error',error);return json(503,{error:mode.startsWith('admin')?'도서 운영 정보를 불러오지 못했습니다. D1·Bunny 연결을 확인해 주세요. 관리자 로그인 상태와는 별개입니다.':'전자책 서비스를 준비 중입니다.'});}
 }
 
 // This route is gated by the existing signed admin session. Test grants use a
@@ -147,8 +145,7 @@ async function uploadPdf(request,url,env){
 async function manageCatalog(request,env){
   const login=adminLogin(request,env.READER_UPLOAD_KEY);if(!login)return json(401,{error:'관리자 로그인이 만료되었습니다. /admin/에서 다시 로그인해 주세요.'});
   if(request.method==='GET'){
-    const books=await catalogFor(env);
-    return json(200,{login,books:await Promise.all(books.map(async book=>({...book,pdfUploaded:await hasPdf(env,book.slug)})))});
+    return json(200,{login,...await withPdfStatus(env,await catalogFor(env))});
   }
   const body=await request.json();if(!Array.isArray(body.books)||body.books.length>500)return json(400,{error:'도서 목록 형식이 올바르지 않습니다.'});
   const seen=new Set(),books=[];
@@ -163,7 +160,7 @@ async function manageCatalog(request,env){
     books.push({slug,title,author:String(item.author||'').trim().slice(0,100),description:String(item.description||'').trim().slice(0,5000),series:String(item.series||'').trim().slice(0,100),published:Boolean(item.published),status:String(item.status||'준비중').slice(0,30),price,regular_price:regular,purchase_url:purchase,cover,video_url:video});
   }
   await writeJSON(env.DB,'reader:catalog',books);
-  return json(200,{ok:true,books:await Promise.all(books.map(async book=>({...book,pdfUploaded:await hasPdf(env,book.slug)})))});
+  return json(200,{ok:true,...await withPdfStatus(env,books)});
 }
 
 async function publicCatalog(env){const books=await catalogFor(env);return json(200,{books:books.filter(safeBook).map(({slug,title,author,description,series,price,regular_price,status,purchase_url,cover,video_url})=>({slug,title,author,description,series,price,regular_price,status,purchase_url,cover,video_url}))});}

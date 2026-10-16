@@ -2,13 +2,11 @@
 
 ## 관리자 사용
 
-1. `https://여명철학.kr/admin/`에서 GitHub 운영자 계정으로 로그인합니다.
+1. `https://여명철학.kr/admin/`에서 관리자 비밀번호로 로그인합니다(자세한 내용은 `ADMIN-SETUP.md`).
 2. 같은 화면의 `도서·판매·영상 관리`에서 도서 정보를 추가하거나 수정합니다.
 3. PDF를 등록하거나 교체하고, 가격·그로블 결제 주소·YouTube 샘플강의 주소를 저장합니다.
 
-관리자 로그인은 GitHub 저장소 쓰기 권한으로 확인합니다. 관리자 화면이 기존 로그인 세션을 이용해 짧은 운영 세션을 만들며, 업로드 키 입력은 요구하지 않습니다. 업로드 키는 Netlify 함수에서 세션 서명에만 사용합니다.
-
-도서 정보와 PDF는 Netlify Blobs의 비공개 저장소에 보관됩니다. 도서 추가·PDF 교체·가격/결제 주소 변경은 저장 즉시 반영되며 Netlify 환경변수, GitHub 도서 데이터, 재배포를 다시 수정할 필요가 없습니다. 새 도서를 등록하면 도서 목록과 열람실에 표시됩니다.
+도서 정보는 Cloudflare D1, PDF는 Bunny Storage의 비공개 영역에 보관됩니다. 도서 추가·PDF 교체·가격/결제 주소 변경은 저장 즉시 반영되며 재배포가 필요하지 않습니다. 공개된 도서는 홈의 시리즈 카드, 도서 목록, 도서 상세, 열람실에 표시됩니다. 빌드 때 상세 페이지가 없는 새 도서는 `book.html?book=<도서코드>` 공용 상세 페이지를 사용합니다.
 
 PDF는 한 권당 최대 30MB이고, 파일 앞부분을 검사해 PDF만 받습니다. 그로블 결제 완료 웹훅에서 기존과 같이 90일 열람권을 부여하며, 기존 entitlement 기록은 같은 저장소에서 유지됩니다.
 
@@ -18,8 +16,4 @@ PDF는 한 권당 최대 30MB이고, 파일 앞부분을 검사해 PDF만 받습
 
 ## 사이트 환경 준비 (최초 1회)
 
-- Netlify Blobs를 사용하는 staging/production 함수 실행 환경
-- `READER_UPLOAD_KEY`: 관리자 운영 세션을 서명하는 기존 secret
-- `GROBLE_WEBHOOK_SECRET`: 결제 webhook 서명을 확인하는 기존 secret
-
-도서를 추가하거나 PDF·가격·결제 링크를 바꿀 때 위 환경 설정을 수정하지 않습니다.
+Cloudflare Pages 환경변수 `READER_UPLOAD_KEY`, `BUNNY_STORAGE_KEY`, `GROBLE_WEBHOOK_SECRET`과 D1 바인딩 `DB`가 필요합니다(`wrangler.toml`, `ADMIN-SETUP.md`). 도서를 추가하거나 PDF·가격·결제 링크를 바꿀 때 환경 설정은 수정하지 않습니다.

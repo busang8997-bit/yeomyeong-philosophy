@@ -18,7 +18,7 @@ test('관리자는 /admin/ 로그인 후 도서 운영과 관리자 전용 열�
  const redirect=fs.readFileSync(path.join(out,'admin/ebooks.html'),'utf8');
  assert.match(page,/도서·판매·영상 관리/);
  assert.match(page,/관리자 비밀번호/);
- assert.match(page,/mode=admin/);
+ assert.match(page,/mode=admin-status/);
  assert.match(page,/ebooks\.js/);
  assert.match(script,/PDF 등록·교체/);
  assert.match(script,/data-key="price"/);
@@ -31,24 +31,39 @@ test('관리자는 /admin/ 로그인 후 도서 운영과 관리자 전용 열�
  assert.match(redirect,/url=\/admin\//);
 }));
 
-test('도서목록은 런타임 카탈로그를 쓰고 상세 구매는 통합 90일 열람실로 연결한다',()=>sandbox(dir=>{
+test('도서목록·홈은 D1 카탈로그를 쓰고 목록→상세→구매/열람 순서로 연결한다',()=>sandbox(dir=>{
  const {out}=build(dir);
  const list=fs.readFileSync(path.join(out,'books.html'),'utf8');
+ const home=fs.readFileSync(path.join(out,'index.html'),'utf8');
  const client=fs.readFileSync(path.join(out,'catalog.js'),'utf8');
+ const detailClient=fs.readFileSync(path.join(out,'book-detail.js'),'utf8');
  assert.match(list,/id="runtime-catalog"/);
  assert.match(list,/catalog\.js/);
+ assert.match(home,/id="home-catalog"/);
+ assert.match(home,/catalog\.js/);
+ // 홈 시리즈 카드는 빌드 때 고정하지 않는다(존재하지 않는 #shelf-N 링크 방지).
+ assert.ok(!/books\.html#shelf-\d/.test(home));
+ assert.ok(!list.includes('class="library-shelf"'));
+ // 출간 예정 도서는 별도 영역에서 상세 페이지로만 연결한다.
+ for(const page of [home,list]){assert.match(page,/id="upcoming"/);assert.match(page,/data-upcoming-slug="book-tarot-training"/);}
  assert.match(client,/mode=catalog/);
- assert.match(client,/90일 열람/);
- assert.match(client,/hasGrobleCheckout/);
  assert.match(client,/book\.status==='판매중'&&hasGrobleCheckout/);
- assert.match(client,/90일 열람 구매하기/);
  assert.match(client,/판매 준비 중/);
- assert.ok(!client.includes('열람·구매하기'));
+ assert.ok(!client.includes('reader.html'),'목록은 열람실로 바로 보내지 않는다');
+ assert.match(client,/book\.html\?book=/);
+ for(const nav of ['consult.html','programs.html','content.html'])assert.ok(!list.match(/<nav class="nav"[\s\S]*?<\/nav>/)[0].includes(nav));
+ assert.match(list,/href="books\.html#library-samples"/);
  for(const slug of ['book-saju-story','book-wangchobo','book-jireumgil','book-jireumgil-middle','book-jireumgil-lower']){
   const detail=fs.readFileSync(path.join(out,`${slug}.html`),'utf8');
+  assert.match(detail,new RegExp(`data-book="${slug}"`));
   assert.match(detail,new RegExp(`reader\\.html\\?book=${slug}`));
+  assert.match(detail,/book-detail\.js/);
   assert.ok(!detail.includes('groble.im'));
  }
+ assert.match(fs.readFileSync(path.join(out,'book.html'),'utf8'),/id="book-generic"/);
+ assert.match(detailClient,/api\('checkout',slug\)/);
+ assert.match(detailClient,/access\?\.allowed/);
+ assert.match(detailClient,/access\?\.can_buy/);
  const catalog=JSON.parse(fs.readFileSync(path.join(dir,'netlify/functions/_shared/catalog.json'),'utf8'));
  assert.deepEqual(catalog.map(book=>book.slug),['book-saju-story','book-wangchobo','book-jireumgil','book-jireumgil-middle','book-jireumgil-lower']);
 }));

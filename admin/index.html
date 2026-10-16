@@ -15,7 +15,7 @@
 <section id="login-panel">
   <div class="login-box">
     <h1>운영자 로그인</h1>
-    <p class="hint">Cloudflare 관리자 비밀번호로 로그인합니다. 한 번 로그인하면 이 브라우저에서 7일 동안 유지됩니다.</p>
+    <p class="hint">Cloudflare 관리자 비밀번호로 로그인합니다. 한 번 로그인하면 이 브라우저와 이 주소에서 7일 동안 유지됩니다. 다른 주소(미리보기 주소·운영 도메인)에서는 따로 로그인해야 합니다.</p>
     <form id="login-form">
       <label for="admin-password"><strong>관리자 비밀번호</strong></label>
       <input id="admin-password" type="password" autocomplete="current-password" required>
@@ -32,8 +32,15 @@
 </main>
 <script type="module">
 const loginPanel=document.getElementById('login-panel'),adminApp=document.getElementById('admin-app'),operator=document.getElementById('operator'),logout=document.getElementById('logout'),form=document.getElementById('login-form'),msg=document.getElementById('login-message');
-async function check(){const r=await fetch('/api/reader?mode=admin',{credentials:'same-origin',cache:'no-store'});if(r.ok){loginPanel.hidden=true;adminApp.hidden=false;operator.textContent='운영자 로그인됨';logout.hidden=false;window.dispatchEvent(new Event('yeomyeong-admin-ready'));return true;}return false;}
-form.addEventListener('submit',async e=>{e.preventDefault();msg.hidden=true;const password=document.getElementById('admin-password').value;const r=await fetch('/api/admin-login',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({password})});const data=await r.json().catch(()=>({}));if(!r.ok){msg.textContent=data.error||'로그인에 실패했습니다.';msg.className='notice error';msg.hidden=false;return;}location.reload();});
+function notice(text){msg.textContent=text;msg.className='notice error';msg.hidden=false;}
+// 로그인 여부는 mode=admin-status로만 판단한다. 도서 목록(D1)·PDF 상태(Bunny) 오류는 로그인 뒤 관리 화면 안에서 따로 표시한다.
+async function check(){
+ let r;try{r=await fetch('/api/reader?mode=admin-status',{credentials:'same-origin',cache:'no-store'});}catch{notice('관리자 서버에 연결하지 못했습니다. 잠시 후 새로고침해 주세요.');return false;}
+ if(r.ok){loginPanel.hidden=true;adminApp.hidden=false;operator.textContent='운영자 로그인됨';logout.hidden=false;window.yeomyeongAdminReady=true;window.dispatchEvent(new Event('yeomyeong-admin-ready'));return true;}
+ if(r.status!==401){const data=await r.json().catch(()=>({}));notice(data.error||'로그인 상태를 확인하지 못했습니다.');}
+ return false;
+}
+form.addEventListener('submit',async e=>{e.preventDefault();msg.hidden=true;const password=document.getElementById('admin-password').value;const r=await fetch('/api/admin-login',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({password})});const data=await r.json().catch(()=>({}));if(!r.ok){notice(data.error||'로그인에 실패했습니다.');return;}location.reload();});
 logout.addEventListener('click',async()=>{await fetch('/api/reader?mode=admin-logout',{method:'POST',credentials:'same-origin'}).catch(()=>{});location.reload();});
 check().catch(()=>{});
 </script>

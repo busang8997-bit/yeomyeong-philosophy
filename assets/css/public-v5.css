@@ -289,3 +289,45 @@ footer{background:#e5ece3}
 .book-price{display:flex;flex-direction:column;gap:4px;margin:12px 0}.book-price del{color:#68736b;font-size:15px;font-weight:500}.book-price strong{color:#8b442d;font-size:20px;font-weight:800}
 .book-unavailable{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 16px;border:1px solid #d7c7aa;border-radius:10px;background:#f0e9da;color:#625c50;font-size:16px;font-weight:700}
 @media(max-width:640px){.book-unavailable{width:100%;min-height:52px;font-size:17px}.bookbody .status{line-height:1.45;word-break:keep-all}}
+
+/* 2026-10-16 staging: compact D1 book cards (list → detail → buy), upcoming area, detail offer. */
+/* 카드: 표지 + 제목/상태/가격을 나란히, 소개는 몇 줄만, 상세 보기 버튼은 넓게. */
+.library-shelf .book{display:grid;grid-template-columns:120px minmax(0,1fr);column-gap:18px;row-gap:4px;padding:18px;align-items:start}
+.library-shelf .book .cover,.library-shelf .book .cover:not(.cover-text){grid-column:1;grid-row:1 / span 4;width:120px;height:auto;min-height:0;aspect-ratio:auto;padding:0;background:transparent!important;box-shadow:none}
+.library-shelf .book .cover img{width:100%;height:auto;max-height:none}
+.library-shelf .book .cover.cover-text{height:160px;background:var(--surface-2)!important}
+.library-shelf .book .cover.cover-text .ct{font-size:16px;padding:8px}
+.library-shelf .bookbody{display:contents}
+.library-shelf .bookbody>*{grid-column:2;margin:0}
+.library-shelf .bookbody .booktitle{font-size:21px;line-height:1.4;min-height:0;word-break:keep-all}
+.library-shelf .bookbody .author,.library-shelf .bookbody .status{font-size:16px}
+.library-shelf .bookbody .book-price{margin:0}
+.library-shelf .bookbody .desc{grid-column:1/-1;margin-top:10px;font-size:18px;line-height:1.6;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden}
+.library-shelf .book-actions{grid-column:1/-1;padding:12px 0 0}
+.library-shelf .book-actions .btn{width:100%;min-height:52px}
+.library-shelf>.books{gap:14px}
+@media(min-width:900px){.library-shelf>.books{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){
+ .library-shelf .book{grid-template-columns:96px minmax(0,1fr);column-gap:14px;padding:14px}
+ .library-shelf .book .cover,.library-shelf .book .cover:not(.cover-text){width:96px}
+ .library-shelf .book .cover.cover-text{height:128px}
+ .library-shelf .book .cover.cover-text .ct{font-size:15px}
+ .library-shelf .bookbody .booktitle{font-size:19px}
+ .library-shelf .bookbody .author,.library-shelf .bookbody .status{font-size:15px}
+ .library-shelf .bookbody .book-price strong{font-size:18px}
+ .library-shelf .bookbody .book-price del{font-size:14px}
+ .library-shelf .bookbody .desc{font-size:17px}
+ .library-shelf>.books{gap:12px}
+}
+.upcoming-books h2{font-size:28px}
+.upcoming-list{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
+.upcoming-list a{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 12px;min-height:56px;padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);text-decoration:none}
+.upcoming-title{font-size:19px;font-weight:700;word-break:keep-all;overflow-wrap:anywhere}
+.upcoming-series{font-size:15px;color:var(--ink-2)}
+@media(min-width:641px){.upcoming-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.detail-offers .book-price{margin:8px 0 12px}
+.detail-status{margin:4px 0}.detail-status .status{font-size:17px;font-weight:700}
+.detail-status .status.done{color:var(--ok,#2f6b45)}.detail-status .status.soon{color:#7a5a1e}
+.detail-note,.detail-reader-link{font-size:16px;color:var(--ink-2)}
+.detail-reader-link a{display:inline-flex;align-items:center;min-height:44px}
+.detailgrid details>summary{min-height:48px;display:flex;align-items:center;cursor:pointer}

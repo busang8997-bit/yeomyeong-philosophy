@@ -88,3 +88,22 @@ test('Cloudflare Pages API keeps PDF files private and serves a purchase-authori
   assert.equal(checkoutRecord.book,book.slug);
   assert.equal(checkoutRecord.readerHash,readerHash);
 });
+
+test('관리자 로그인 확인은 D1·Bunny 상태와 분리되고 Bunny 키가 없어도 도서 목록은 열린다',async()=>{
+  const env={DB:new TestDB(),READER_UPLOAD_KEY:'test-reader-key'};
+  const call=(mode,cookie='')=>onRequest({request:new Request(`https://stage.example/api/reader?mode=${mode}`,{headers:cookie?{cookie}:{}}),env});
+  assert.equal((await call('admin-status')).status,401);
+  assert.equal((await call('admin-status',adminCookie('other-key'))).status,401);
+  const ok=await call('admin-status',adminCookie(env.READER_UPLOAD_KEY));
+  assert.equal(ok.status,200);
+  assert.equal((await ok.json()).login,'operator');
+  // Preview에 BUNNY_STORAGE_KEY가 없는 상황: 로그인은 유지되고 PDF 상태만 확인 불가로 표시된다.
+  const admin=await call('admin',adminCookie(env.READER_UPLOAD_KEY));
+  assert.equal(admin.status,200);
+  const data=await admin.json();
+  assert.equal(data.storageError,true);
+  assert.ok(data.books.length>0&&data.books.every(book=>book.pdfUploaded===null));
+  const unset=await onRequest({request:new Request('https://stage.example/api/reader?mode=admin-status'),env:{DB:new TestDB()}});
+  assert.equal(unset.status,503);
+  assert.equal((await call('admin-session')).status,405);
+});

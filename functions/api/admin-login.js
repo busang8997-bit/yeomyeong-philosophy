@@ -6,7 +6,7 @@ function signed(value,secret){return createHmac('sha256',secret).update(value).d
 function safeEqual(a,b){const x=Buffer.from(String(a||'')),y=Buffer.from(String(b||''));return x.length===y.length&&timingSafeEqual(x,y);}
 export async function onRequestPost({request,env}){
   const secret=String(env.READER_UPLOAD_KEY||'');
-  if(!secret)return json(503,{error:'관리자 비밀번호가 아직 설정되지 않았습니다.'});
+  if(!secret)return json(503,{error:'관리자 비밀번호가 이 배포에 적용되지 않았습니다. 설정 후 다시 배포해야 적용됩니다.'});
   const body=await request.json().catch(()=>({}));
   if(!safeEqual(body.password,secret))return json(401,{error:'관리자 비밀번호가 맞지 않습니다.'});
   const maxAge=7*24*60*60;
