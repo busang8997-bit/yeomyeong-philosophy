@@ -107,3 +107,14 @@ test('관리자 로그인 확인은 D1·Bunny 상태와 분리되고 Bunny 키�
   assert.equal(unset.status,503);
   assert.equal((await call('admin-session')).status,405);
 });
+
+test('Bunny 키가 없는 환경에서도 열람 세션·결제 시작은 Worker 예외 대신 JSON 503을 돌려준다',async()=>{
+  const env={DB:new TestDB(),READER_UPLOAD_KEY:'test-reader-key'};
+  const {defaultCatalog}=await import('../functions/api/_shared/default-catalog.js');
+  await env.DB.prepare('INSERT INTO app_kv(key,value) VALUES(?,?)').bind('reader:catalog',JSON.stringify(defaultCatalog.map(book=>book.slug==='book-saju-story'?{...book,status:'판매중',price:'8,000원',purchase_url:'https://groble.im/products/test-book'}:book))).run();
+  for(const mode of ['session','checkout&book=book-saju-story']){
+    const response=await onRequest({request:new Request(`https://stage.example/api/reader?mode=${mode}`),env});
+    assert.equal(response.status,503);
+    assert.ok((await response.json()).error);
+  }
+});

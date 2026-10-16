@@ -33,6 +33,7 @@ function pdfObject(slug){return String(slug);}
 
 export async function onRequest({request,env}){
   const url=new URL(request.url),method=request.method.toUpperCase(),mode=url.searchParams.get('mode')||'session';
+  // 각 처리 함수는 await로 받아야 비동기 오류가 아래 catch로 들어온다(없으면 Worker 예외 페이지가 그대로 노출된다).
   try{
     // 로그인 여부만 확인한다. D1·Bunny를 건드리지 않으므로 저장소 문제와 로그인 문제를 구분할 수 있다.
     if(mode==='admin-status'&&method==='GET'){
@@ -41,14 +42,14 @@ export async function onRequest({request,env}){
       return login?json(200,{ok:true,login}):json(401,{error:'관리자 로그인이 필요합니다.'});
     }
     if(mode==='admin-logout'&&method==='POST')return json(200,{ok:true},{'Set-Cookie':`${ADMIN_COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`});
-    if(mode==='admin'&&(method==='GET'||method==='POST'))return manageCatalog(request,env);
-    if(mode==='admin-test-access'&&method==='POST')return adminTestAccess(request,url,env);
-    if(mode==='catalog'&&method==='GET')return publicCatalog(env);
-    if(mode==='upload'&&method==='POST')return uploadPdf(request,url,env);
-    if(mode==='pdf'&&(method==='GET'||method==='HEAD'))return servePdf(request,url,env);
-    if(mode==='checkout'&&method==='GET')return startCheckout(request,url,env);
+    if(mode==='admin'&&(method==='GET'||method==='POST'))return await manageCatalog(request,env);
+    if(mode==='admin-test-access'&&method==='POST')return await adminTestAccess(request,url,env);
+    if(mode==='catalog'&&method==='GET')return await publicCatalog(env);
+    if(mode==='upload'&&method==='POST')return await uploadPdf(request,url,env);
+    if(mode==='pdf'&&(method==='GET'||method==='HEAD'))return await servePdf(request,url,env);
+    if(mode==='checkout'&&method==='GET')return await startCheckout(request,url,env);
     if(mode!=='session'||method!=='GET')return json(405,{error:'허용되지 않은 요청입니다.'},{Allow:'GET, POST'});
-    return readerSession(request,env);
+    return await readerSession(request,env);
   }catch(error){console.error('Cloudflare reader error',error);return json(503,{error:mode.startsWith('admin')?'도서 운영 정보를 불러오지 못했습니다. D1·Bunny 연결을 확인해 주세요. 관리자 로그인 상태와는 별개입니다.':'전자책 서비스를 준비 중입니다.'});}
 }
 

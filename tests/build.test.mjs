@@ -40,6 +40,8 @@ test('도서목록·홈은 D1 카탈로그를 쓰고 목록→상세→구매/�
  assert.match(list,/id="runtime-catalog"/);
  assert.match(list,/catalog\.js/);
  assert.match(home,/id="home-catalog"/);
+ // 공유 미리보기(og:description)도 상담이 아닌 전자책 안내 문구를 쓴다.
+ assert.ok(!/og:description"[^>]*상담/.test(home));
  assert.match(home,/catalog\.js/);
  // 홈 시리즈 카드는 빌드 때 고정하지 않는다(존재하지 않는 #shelf-N 링크 방지).
  assert.ok(!/books\.html#shelf-\d/.test(home));

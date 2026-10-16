@@ -68,7 +68,7 @@ export function build(root=process.cwd()){
   }
   if(file==='index.html'){
    if(settings.home_title!==defaults.home_title)s=s.replace(/(<h1\b[^>]*>)[\s\S]*?(<\/h1>)/,`$1${esc(settings.home_title)}$2`);
-   s=s.replace(/(<meta\b[^>]*name="description"[^>]*content=")[^"]*(")/,`$1${esc(settings.description)}$2`).replace(/(<meta\b[^>]*content=")[^"]*("[^>]*name="description")/,`$1${esc(settings.description)}$2`);
+   s=s.replace(/(<meta\b[^>]*name="description"[^>]*content=")[^"]*(")/,`$1${esc(settings.description)}$2`).replace(/(<meta\b[^>]*content=")[^"]*("[^>]*name="description")/,`$1${esc(settings.description)}$2`).replace(/(<meta\b[^>]*property="og:description"[^>]*content=")[^"]*(")/,`$1${esc(settings.description)}$2`);
   }
   if(settings.intro!==defaults.intro&&((care&&file==='index.html')||(!care&&file==='about.html'))){
    if(care)s=s.replace(/(<p class="body">)[\s\S]*?(<\/p>)/,`$1${esc(settings.intro)}$2`);
