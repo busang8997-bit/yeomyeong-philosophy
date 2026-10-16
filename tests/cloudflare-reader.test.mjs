@@ -102,6 +102,11 @@ test('관리자 로그인 확인은 D1·Bunny 상태와 분리되고 Bunny 키�
   assert.equal(admin.status,200);
   const data=await admin.json();
   assert.equal(data.storageError,'missing_key');
+  assert.deepEqual(data.storageEnv,[]);
+  const named=await onRequest({request:new Request('https://stage.example/api/reader?mode=admin',{headers:{cookie:adminCookie(env.READER_UPLOAD_KEY)}}),env:{...env,'BUNNY_STORAGE_KEY ':'x',BUNNY_STORAGE_KEY:'  '}});
+  const namedData=await named.json();
+  assert.deepEqual(namedData.storageEnv,[{name:'BUNNY_STORAGE_KEY ',empty:false},{name:'BUNNY_STORAGE_KEY',empty:true}]);
+  assert.ok(!JSON.stringify(namedData).includes('"x"'));
   assert.ok(data.books.length>0&&data.books.every(book=>book.pdfUploaded===null));
   const unset=await onRequest({request:new Request('https://stage.example/api/reader?mode=admin-status'),env:{DB:new TestDB()}});
   assert.equal(unset.status,503);
