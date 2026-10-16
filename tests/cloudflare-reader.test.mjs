@@ -134,3 +134,27 @@ test('Bunny가 키를 거부하면 관리자 화면에 http 상태 원인 코드
     assert.equal((await admin.json()).storageError,'http_401');
   }finally{globalThis.fetch=saved;}
 });
+
+test('90일이 지난 열람권은 PDF를 막고 구매 가능 상태로 돌아가며, 아직 남은 열람권은 계속 열린다',async()=>{
+  storageFiles.clear();
+  const env={DB:new TestDB(),BUNNY_STORAGE_KEY:'test-bunny-key',READER_UPLOAD_KEY:'test-reader-key'};
+  const {defaultCatalog}=await import('../functions/api/_shared/default-catalog.js');
+  const slug='book-saju-story';
+  await env.DB.prepare('INSERT INTO app_kv(key,value) VALUES(?,?)').bind('reader:catalog',JSON.stringify(defaultCatalog.map(book=>book.slug===slug?{...book,status:'판매중',price:'8,000원',purchase_url:'https://groble.im/products/test-book'}:book))).run();
+  storageFiles.set(slug,new TextEncoder().encode('%PDF-1.4\nexpiry test'));
+  const readerId='c'.repeat(64),hash=createHash('sha256').update(readerId).digest('hex'),key=`entitlement:${hash}:${slug}`;
+  const grant=expiresAt=>env.DB.prepare('INSERT INTO app_kv(key,value) VALUES(?,?)').bind(key,JSON.stringify({payments:[{paymentId:'pay-expiry-test',paidAt:expiresAt-90*24*60*60*1000,expiresAt,refunded:false}]})).run();
+  const call=mode=>onRequest({request:new Request(`https://stage.example/api/reader?mode=${mode}&book=${slug}`,{headers:{cookie:`ym_reader_id=${readerId}`,range:'bytes=0-7'}}),env});
+  const state=async()=>(await (await call('session')).json()).books.find(book=>book.slug===slug);
+
+  await grant(Date.now()+60*1000);
+  assert.equal((await call('pdf')).status,206);
+  const active=await state();
+  assert.equal(active.allowed,true);assert.equal(active.can_buy,true);
+
+  await grant(Date.now()-1000);
+  assert.equal((await call('pdf')).status,403);
+  const expired=await state();
+  assert.equal(expired.allowed,false);assert.equal(expired.expires_at,null);
+  assert.equal(expired.can_buy,true);
+});
