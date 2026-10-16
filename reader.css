@@ -21,8 +21,8 @@
 .reader-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 .reader-actions [hidden],.viewer[hidden]{display:none}
 .reader-actions button,.viewer-toolbar button{font:inherit;cursor:pointer}
-.viewer{margin-top:28px;border:1px solid #dce3dd;border-radius:12px;overflow:hidden;background:#f2f3f1}
-.viewer-toolbar{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;background:#1f3b30;color:#fff}
+.viewer{margin-top:28px;border:1px solid #dce3dd;border-radius:12px;overflow:clip;background:#f2f3f1;scroll-margin-top:84px}
+.viewer-toolbar{position:sticky;top:71px;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;background:#1f3b30;color:#fff}
 .viewer-page-controls,.viewer-zoom-controls{display:flex;align-items:center;gap:8px}
 .viewer-toolbar button{min-height:40px;padding:6px 12px;border:1px solid rgba(255,255,255,.4);border-radius:7px;background:transparent;color:#fff}
 #page-number{width:64px;height:38px;border:1px solid #ccd5cf;border-radius:6px;text-align:center;font:inherit}
@@ -41,5 +41,21 @@
  .viewer-page-controls,.viewer-zoom-controls{justify-content:center}
  .viewer-toolbar button{padding:6px 9px}
  .page-stage{padding:8px 2px;min-height:150px}
+}
+/* 2026-10-16 열람화면 UI: 조작 막대 고정(PC는 메뉴 아래, 모바일은 화면 아래), 버튼 배치·여백 정리 */
+.viewer-page-controls span{white-space:nowrap}
+.page-status{min-height:0;padding:8px 12px 0;font-weight:600}
+.page-stage{padding:12px 16px 20px}
+@media(max-width:600px){
+ .reader-actions .btn{flex:1 1 100%;text-align:center;min-height:52px}
+ .viewer{display:flex;flex-direction:column;margin-top:22px;scroll-margin-top:80px}
+ .page-status{order:1}.page-stage{order:2}.reader-note{order:3}
+ .viewer-toolbar{order:4;position:sticky;top:auto;bottom:0;flex-direction:column;align-items:stretch;gap:8px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -4px 14px rgba(18,42,32,.22)}
+ .viewer-page-controls{justify-content:space-between}
+ .viewer-zoom-controls{display:grid;grid-template-columns:56px minmax(0,1fr) 56px}
+ .viewer-toolbar button{min-height:44px;padding:6px 14px}
+ #page-number{width:60px;height:44px;font-size:16px}
+ .viewer-page-controls button{min-width:64px}
+ .page-stage{padding:8px 4px 16px}
 }
 @media print{.reader-site-head,.reader-panel> :not(#viewer),.viewer-toolbar,.reader-note{display:none!important}.reader-main{margin:0;padding:0}.viewer{border:0}#pdf-page{box-shadow:none}}
