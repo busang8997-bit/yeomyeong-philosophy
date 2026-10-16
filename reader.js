@@ -13,7 +13,7 @@ function setSelected(slug){
   if(!selected){price.textContent='';openButton.hidden=true;setMessage('출간 도서 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.','error');return;}
   select.value=selected.slug;
   price.textContent=selected.price?`90일 열람 ${selected.price}${selected.regular_price?` (정가 ${selected.regular_price})`:''}`:'';
-  viewer.hidden=true;pdf=null;openButton.hidden=!selected.allowed;buyButton.hidden=!selected.can_buy;
+  viewer.hidden=true;pdf=null;openButton.hidden=!selected.allowed;buyButton.hidden=selected.allowed||!selected.can_buy;
   if(selected.allowed){const end=new Date(selected.expires_at).toLocaleDateString('ko-KR');setMessage(`이 책의 열람권이 있습니다. ${end}까지 읽을 수 있습니다.`,'success');}
   else if(selected.can_buy){setMessage('아직 이 책의 열람 권한이 없습니다. 결제 후 같은 브라우저에서 읽을 수 있습니다.');}
   else{setMessage('전자책 결제 연결을 준비하고 있습니다. 도서 목록에서 출시 안내를 확인해 주세요.');}
