@@ -331,3 +331,18 @@ footer{background:#e5ece3}
 .detail-note,.detail-reader-link{font-size:16px;color:var(--ink-2)}
 .detail-reader-link a{display:inline-flex;align-items:center;min-height:44px}
 .detailgrid details>summary{min-height:48px;display:flex;align-items:center;cursor:pointer}
+
+/* 2026-10-16 staging 레이아웃 최종검수: 홈 시리즈 3열, 히어로 버튼 간격, 상세 표지 틀, 목차 열기 표시, 섹션 간격, 제목 줄바꿈. */
+.sales-home .hero .row{margin-top:20px}
+@media(min-width:900px){.sales-series{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.detailgrid .cover.big:not(.cover-text){padding:0;box-shadow:none;background:transparent!important;aspect-ratio:auto;justify-content:flex-start}
+.detailgrid .cover.big:not(.cover-text) img{width:100%;height:auto;max-height:none;border-radius:6px;box-shadow:0 4px 14px rgba(32,60,48,.18)}
+.detailgrid details{margin:14px 0}
+.detailgrid details>summary{list-style:none;padding:0 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-weight:700;justify-content:space-between}
+.detailgrid details>summary::-webkit-details-marker{display:none}
+.detailgrid details>summary::after{content:'+';font-size:24px;line-height:1;color:var(--ink-2)}
+.detailgrid details[open]>summary::after{content:'−'}
+.detailgrid details>p{margin:12px 2px 0}
+.library-samples{margin-top:40px}
+.library-samples h2{margin-top:0}
+.library-shelf .bookbody .booktitle,.sales-series-card h3,.upcoming-title{text-wrap:balance}
