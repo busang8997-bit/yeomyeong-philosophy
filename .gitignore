@@ -6,3 +6,7 @@ private-books/*.pdf
 !.env.example
 netlify/functions/_shared/catalog.json
 netlify/functions/_shared/reader-config.json
+ops/node_modules/
+ops/out/
+.wrangler/
+.claude/settings.local.json

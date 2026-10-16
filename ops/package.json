@@ -1,0 +1,17 @@
+{
+  "name": "yeomyeong-ops",
+  "private": true,
+  "type": "module",
+  "description": "로컬 PC 운영 도구: Wrangler로 Cloudflare Pages 확인·관리, Playwright로 실제 staging 화면 검수. 사이트 빌드에는 포함되지 않는다.",
+  "scripts": {
+    "cf": "node cf.mjs",
+    "check": "node check-site.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.56.1",
+    "wrangler": "4.151.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

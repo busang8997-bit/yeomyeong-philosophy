@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(git push origin main:*)",
+      "Bash(git push origin HEAD:main:*)",
+      "Bash(git push -f:*)",
+      "Bash(git push --force:*)",
+      "Bash(git merge main:*)",
+      "Bash(npx wrangler pages secret put:*)",
+      "Bash(npx wrangler pages secret delete:*)",
+      "Bash(npx wrangler pages deploy:*)",
+      "Bash(npx wrangler d1 execute:*)",
+      "Bash(node ops/node_modules/wrangler/bin/wrangler.js:*)",
+      "Bash(YEOMYEONG_ALLOW_PRODUCTION=1:*)"
+    ],
+    "ask": [
+      "Bash(node ops/cf.mjs secret-put:*)"
+    ],
+    "allow": [
+      "Bash(node ops/cf.mjs whoami)",
+      "Bash(node ops/cf.mjs status)",
+      "Bash(node ops/cf.mjs secrets)",
+      "Bash(node ops/cf.mjs wait-deploy:*)",
+      "Bash(node ops/cf.mjs redeploy-staging)",
+      "Bash(node ops/check-site.mjs:*)",
+      "Bash(npm run build)",
+      "Bash(npm test)",
+      "Bash(git push origin staging)",
+      "Bash(git push -u origin staging)"
+    ]
+  }
+}
