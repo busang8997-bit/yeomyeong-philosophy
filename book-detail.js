@@ -19,8 +19,9 @@ function fillGeneric(book){
  const cover=generic.querySelector('[data-cover]');
  if(book.cover){const img=document.createElement('img');img.src=book.cover;img.alt=`${book.title} 표지`;cover.replaceChildren(img);cover.classList.remove('cover-text');}
  else cover.querySelector('[data-title-cover]').textContent=book.title;
- if(book.video_url){const sample=generic.querySelector('[data-sample]'),link=document.createElement('a');link.className='btn btn-accent';link.href=book.video_url;link.target='_blank';link.rel='noopener noreferrer';link.textContent='유튜브 샘플강의 보기';sample.append(link);sample.hidden=false;}
+ if(isYouTube(book.video_url)){const sample=generic.querySelector('[data-sample]'),link=document.createElement('a');link.className='btn btn-accent';link.href=book.video_url;link.target='_blank';link.rel='noopener noreferrer';link.textContent='유튜브 샘플강의 보기';sample.append(link);sample.hidden=false;}
 }
+const isYouTube=value=>{try{const url=new URL(value);return url.protocol==='https:'&&(/(^|\.)youtube\.com$/.test(url.hostname)||url.hostname==='youtu.be');}catch{return false;}};
 async function load(){
  if(!offer||!body)return;
  if(!slug){body.innerHTML='<p>도서를 찾을 수 없습니다. <a href="books.html">전자책 목록</a>에서 다시 선택해 주세요.</p>';return;}
@@ -33,6 +34,7 @@ async function load(){
   offer.querySelector('.detail-reader-link')?.remove();return;
  }
  if(generic)fillGeneric(book);
+ else{const sample=document.querySelector('.detail-sample[data-sample]');if(sample){if(isYouTube(book.video_url)&&!sample.querySelector('a')){const link=document.createElement('a');link.className='btn btn-accent btn-sm';link.href=book.video_url;link.target='_blank';link.rel='noopener noreferrer';link.textContent='유튜브 샘플강의 보기';sample.append(link);}sample.hidden=!sample.querySelector('a');}}
  // 판매 가능 여부(PDF 등록 포함)와 열람권은 열람실과 같은 세션 응답을 기준으로 한다.
  let access=null;try{access=(await getJSON('session')).books.find(item=>item.slug===slug)||null;}catch{}
  const price=book.price?`<p class="book-price">${book.regular_price?`<del>정가 ${esc(book.regular_price)}</del>`:''}<strong>90일 열람 ${esc(book.price)}</strong></p>`:'';

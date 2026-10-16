@@ -55,3 +55,18 @@ for(var i=0;i<boxes.length;i++)wire(boxes[i]);
 })();
 
 (function(){function openShelf(){const id=location.hash.slice(1);const shelf=document.getElementById(id);if(shelf&&shelf.classList.contains('library-shelf')){shelf.open=true;shelf.scrollIntoView({block:'start'});}}window.addEventListener('hashchange',openShelf);openShelf();})();
+
+/* 샘플강의 메뉴·홈 안내는 실제 YouTube 샘플강의 링크(video_url)가 하나라도 있을 때만 보인다. 관리자에서 등록하면 자동으로 나타난다. */
+(function(){
+var targets=document.querySelectorAll('[data-samples-link],[data-samples-home]');
+if(!targets.length)return;
+var KEY='ym-has-samples';
+function isYouTube(v){try{var u=new URL(v);return u.protocol==='https:'&&(/(^|\.)youtube\.com$/.test(u.hostname)||u.hostname==='youtu.be');}catch(e){return false;}}
+function show(on){for(var i=0;i<targets.length;i++)targets[i].hidden=!on;}
+try{if(sessionStorage.getItem(KEY)==='1')show(true);}catch(e){}
+fetch('/api/reader?mode=catalog',{cache:'no-store'}).then(function(r){return r.ok?r.json():Promise.reject();}).then(function(d){
+ var on=(d.books||[]).some(function(b){return isYouTube(b.video_url);});
+ var s=document.querySelector('#library-samples');if(s&&Number(s.dataset.staticCount)>0)on=true;
+ show(on);try{sessionStorage.setItem(KEY,on?'1':'0');}catch(e){}
+}).catch(function(){});
+})();
