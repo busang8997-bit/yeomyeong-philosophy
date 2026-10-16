@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {build,safeURL} from '../scripts/build.mjs';
+import {spawnSync} from 'node:child_process';
 
 function sandbox(fn){
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'yeomyeong-admin-'));
@@ -91,4 +92,11 @@ test('서버는 관리자 세션을 확인하고 카탈로그·PDF를 비공개 
 test('외부 링크 검증은 위험한 URL을 거부한다',()=>{
  for(const value of ['javascript:alert(1)','//attacker.test','https://name:secret@example.com','assets/../../secret'])assert.throws(()=>safeURL(value));
  assert.equal(safeURL('https://groble.im/products/book'),'https://groble.im/products/book');
+});
+
+test('브라우저 스크립트는 문법 오류 없이 읽힌다',()=>{
+ for(const file of ['admin/ebooks.js','catalog.js','book-detail.js','reader.js']){
+  const result=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});
+  assert.equal(result.status,0,`${file}: ${result.stderr}`);
+ }
 });

@@ -101,7 +101,7 @@ test('관리자 로그인 확인은 D1·Bunny 상태와 분리되고 Bunny 키�
   const admin=await call('admin',adminCookie(env.READER_UPLOAD_KEY));
   assert.equal(admin.status,200);
   const data=await admin.json();
-  assert.equal(data.storageError,true);
+  assert.equal(data.storageError,'missing_key');
   assert.ok(data.books.length>0&&data.books.every(book=>book.pdfUploaded===null));
   const unset=await onRequest({request:new Request('https://stage.example/api/reader?mode=admin-status'),env:{DB:new TestDB()}});
   assert.equal(unset.status,503);
@@ -117,4 +117,15 @@ test('Bunny 키가 없는 환경에서도 열람 세션·결제 시작은 Worker
     assert.equal(response.status,503);
     assert.ok((await response.json()).error);
   }
+});
+
+test('Bunny가 키를 거부하면 관리자 화면에 http 상태 원인 코드를 준다',async()=>{
+  const env={DB:new TestDB(),READER_UPLOAD_KEY:'test-reader-key',BUNNY_STORAGE_KEY:'wrong-key'};
+  const saved=globalThis.fetch;
+  globalThis.fetch=async(input,init)=>String(input).startsWith(storageBase)?new Response(null,{status:401}):saved(input,init);
+  try{
+    const admin=await onRequest({request:new Request('https://stage.example/api/reader?mode=admin',{headers:{cookie:adminCookie(env.READER_UPLOAD_KEY)}}),env});
+    assert.equal(admin.status,200);
+    assert.equal((await admin.json()).storageError,'http_401');
+  }finally{globalThis.fetch=saved;}
 });

@@ -26,8 +26,9 @@ async function catalogFor(env){let items=await readJSON(env.DB,'reader:catalog')
 const storage=env=>bunnyBucket(env);
 async function hasPdf(env,slug){return Boolean(await storage(env).head(slug));}
 // 관리자 화면용: Bunny 연결 문제(예: Preview에 BUNNY_STORAGE_KEY 없음)가 도서 목록·로그인까지 막지 않도록 null로 표시한다.
-async function pdfStatus(env,slug){try{return await hasPdf(env,slug);}catch(error){console.error('Bunny PDF status error',error);return null;}}
-async function withPdfStatus(env,books){const list=await Promise.all(books.map(async book=>({...book,pdfUploaded:await pdfStatus(env,book.slug)})));return {books:list,storageError:list.some(book=>book.pdfUploaded===null)};}
+// 관리자에게는 원인 코드만 알린다(missing_key: 이 배포에 키가 없음, http_401 등: Bunny가 거부, network: 연결 실패). 키 값은 내보내지 않는다.
+async function pdfStatus(env,slug,errors){try{return await hasPdf(env,slug);}catch(error){console.error('Bunny PDF status error',error);errors.add(error?.code||'network');return null;}}
+async function withPdfStatus(env,books){const errors=new Set();const list=await Promise.all(books.map(async book=>({...book,pdfUploaded:await pdfStatus(env,book.slug,errors)})));return {books:list,storageError:errors.size?[...errors].join(','):false};}
 function safeBook(book){return Boolean(book?.published);}
 function pdfObject(slug){return String(slug);}
 

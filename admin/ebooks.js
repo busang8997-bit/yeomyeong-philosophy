@@ -27,7 +27,12 @@ function render(){
  });
 }
 function readForm(){return [...list.querySelectorAll('.book')].map(section=>{const book={...books[Number(section.dataset.index)]};section.querySelectorAll('[data-key]').forEach(input=>{book[input.dataset.key]=input.type==='checkbox'?input.checked:input.value.trim();});return book;});}
-async function load(){try{const data=await request('admin');books=(data.books||[]).map(book=>({...book,persisted:true}));render();say(data.storageError?`${books.length}권을 불러왔습니다. 다만 PDF 저장소(Bunny)에 연결하지 못해 PDF 등록 상태를 확인할 수 없습니다. 이 배포의 BUNNY_STORAGE_KEY 설정을 확인해 주세요.`:`${books.length}권을 불러왔습니다. 변경사항은 이 화면에서 저장할 수 있습니다.`,data.storageError?'error':'ok');}catch(error){say(error.message,'error');}}
+function storageHint(code){
+ if(code.includes('missing_key'))return '원인: 이 배포에 BUNNY_STORAGE_KEY가 적용되지 않았습니다. 이 주소가 Preview 배포라면 Cloudflare의 Preview 환경 변수에 키를 넣은 뒤 다시 배포해야 합니다. (원인 코드: missing_key)';
+ if(/http_40[13]/.test(code))return `원인: Bunny가 키를 거부했습니다. BUNNY_STORAGE_KEY 값이 yeomyeong-pdf 저장소의 Storage 비밀번호와 같은지 확인해 주세요. (원인 코드: ${code})`;
+ return `원인 코드: ${code}`;
+}
+async function load(){try{const data=await request('admin');books=(data.books||[]).map(book=>({...book,persisted:true}));render();say(data.storageError?`${books.length}권을 불러왔습니다. 다만 PDF 저장소(Bunny)에 연결하지 못해 PDF 등록 상태를 확인할 수 없습니다. ${storageHint(String(data.storageError))}`:`${books.length}권을 불러왔습니다. 변경사항은 이 화면에서 저장할 수 있습니다.`,data.storageError?'error':'ok');}catch(error){say(error.message,'error');}}
 async function save(){if(busy)return;busy=true;$('#save').disabled=true;try{const data=await request('admin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({books:readForm()})});books=(data.books||[]).map(book=>({...book,persisted:true}));render();say('도서·가격·그로블 주소를 저장했습니다. 결제와 열람 화면에 즉시 반영됩니다.','ok');}catch(error){say(error.message,'error');}finally{busy=false;$('#save').disabled=false;}}
 function makeSlug(){let n=1,slug;const used=new Set(books.map(b=>b.slug));do{slug=`book-new-${String(n++).padStart(3,'0')}`;}while(used.has(slug));return slug;}
 $('#add').addEventListener('click',()=>{books.push({slug:makeSlug(),title:'새 전자책',author:'이부상 지음',description:'',series:'',published:false,status:'준비중',price:'',regular_price:'',purchase_url:'',cover:'',video_url:'',pdfUploaded:false,persisted:false});render();list.lastElementChild?.scrollIntoView({behavior:'smooth',block:'center'});});

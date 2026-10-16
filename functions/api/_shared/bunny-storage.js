@@ -6,7 +6,7 @@ function storageUrl(path){
 
 function accessKey(env){
   const key=String(env.BUNNY_STORAGE_KEY||'').trim();
-  if(!key) throw new Error('BUNNY_STORAGE_KEY is not configured');
+  if(!key) throw Object.assign(new Error('BUNNY_STORAGE_KEY is not configured'),{code:'missing_key'});
   return key;
 }
 
@@ -36,7 +36,7 @@ export function bunnyBucket(env){
       }
       res=await request(env,path,{method:'GET',headers:{Range:'bytes=0-0'}});
       if(res.status===404) return null;
-      if(!res.ok) throw new Error(`Bunny Storage HEAD failed: ${res.status}`);
+      if(!res.ok) throw Object.assign(new Error(`Bunny Storage HEAD failed: ${res.status}`),{code:`http_${res.status}`});
       const size=sizeFromHeaders(res.headers);
       try{await res.body?.cancel();}catch{}
       return {size};
