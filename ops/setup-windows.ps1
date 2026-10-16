@@ -1,8 +1,8 @@
-﻿# 여명철학 로컬 운영 환경 준비 (Windows PowerShell)
+# 여명철학 로컬 운영 환경 준비 (Windows PowerShell)
 # 처음 한 번 실행:
 #   irm https://raw.githubusercontent.com/busang8997-bit/yeomyeong-philosophy/staging/ops/setup-windows.ps1 | iex
-# 이미 저장소가 있으면 그 폴더에서:
-#   powershell -ExecutionPolicy Bypass -File ops\setup-windows.ps1
+# 이미 저장소가 있으면 그 폴더에서 (한글 출력 때문에 같은 irm 방식 권장):
+#   irm https://raw.githubusercontent.com/busang8997-bit/yeomyeong-philosophy/staging/ops/setup-windows.ps1 | iex
 #
 # 하는 일: Git·Node·Claude Code 점검(없으면 설치) → 저장소 준비(staging) → 운영 도구 설치
 #          → Cloudflare 로그인(처음 한 번 브라우저 승인) → 프로젝트·배포·Secret 이름 점검
